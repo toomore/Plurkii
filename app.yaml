@@ -1,0 +1,38 @@
+application: plurkii
+version: car
+runtime: python
+api_version: 1
+
+handlers:
+#- url: /testiicron
+#  script: testcron.py
+- url: /favicon\.ico
+  static_files: static/images/favicon.ico
+  upload: static/images/favicon.ico
+  mime_type: image/x-icon
+- url: /images
+  static_dir: static/images
+- url: /images/(.*)
+  static_files: static/images/\1
+  upload: static/images/(.*)
+- url: /canvas\.html
+  static_files: static/canvas.html
+  upload: static/canvas.html
+- url: /rpc_relay\.html
+  static_files: static/rpc_relay.html
+  upload: static/rpc_relay.html
+- url: /sitemap\.xml
+  static_files: static/sitemap.xml
+  upload: static/sitemap.xml
+- url: /plurkiisearch\.xml
+  static_files: static/plurkiisearch.xml
+  upload: static/plurkiisearch.xml
+- url: /css
+  static_dir: static/css
+- url: /css/(.*)
+  static_files: static/css/\1
+  upload: static/css/(.*)
+- url: .*
+  script: main3.py
+  #secure: always
+  #login: admin

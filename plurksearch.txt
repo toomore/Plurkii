@@ -1,0 +1,11 @@
+Plurk 的搜尋會提供滿多重要的資訊，可以透過搜尋 nickname 的方式回傳搜尋結果，在結果中會有圖片中的資訊。
+
+http://www.plurk.com/Search/queryPlurks
+- params:query,offset
+example:http://www.plurk.com/Search/queryPlurks?query=toomore
+
+但Plurk的搜尋功能常常會停掉無法作用，所以這方法會有缺陷。但比起使用網頁擷取字串的方式來說，這樣的擷取資料量比較少，節省很多容量資源。
+這是今天下午測試出來的，因為 API 都只能從 uid 出發，nickname 也只能透過網頁擷取一種方式。
+
+getFriendsByOffset
+http://www.plurk.com/Friends/getFriendsByOffset?offset=0&user_id=703365

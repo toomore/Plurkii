@@ -1,0 +1,15 @@
+{% extends "h_display.htm" %}
+
+{% block titlename %}{{ tv.nick_name }}'s avatar - {% endblock %}
+
+{% block userinfo %}
+    <div class="userinfo"><a href="/?u={{ tv.nick_name }}"><img width="90" border="0" src="http://avatars.plurk.com/{{ tv.uid }}-big{{ tv.avatar }}.jpg"> ← </a> <b>{{ tv.nick_name }}'s avatar</b></div>
+{% endblock %}
+
+{% block content %}
+{% for i in p.piclist %}<img alt="" src="http://avatars.plurk.com/{{ tv.uid }}-big{{ i }}.jpg">{% endfor %}
+{% endblock %}
+
+{% block foot %}
+<div align="right">{% include "h_desc.htm" %}</div>
+{% endblock %}

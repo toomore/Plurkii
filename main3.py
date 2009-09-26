@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from __future__ import division
+
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
 from google.appengine.ext.webapp.util import run_wsgi_app
@@ -115,6 +117,58 @@ class seeallfriend(webapp.RequestHandler):
             re = {'url':url}
             self.response.out.write(template.render('hh_refresh.htm',{'re':re}))
 
+class friccindex(webapp.RequestHandler):
+    def get(self):
+        u = self.request.get('u').replace('/','')
+        tv = {'nick_name': u}
+        self.response.out.write(template.render('h_friccindex.htm',{'tv':tv}))
+
+class fricc(webapp.RequestHandler):
+    def get(self):
+        ua = self.request.get('ua').replace('/','')
+        ub = self.request.get('ub').replace('/','')
+        ua = ua.replace(' ','')
+        ub = ub.replace(' ','')
+        
+        if len(ua) or len(ub):
+            p = plurkapi.PlurkAPI()
+        else:
+            self.redirect('/oops')
+
+        #self.response.out.write(u)
+        
+        try:
+            botid,botpwd = robot.robot()
+            p.login(botid,botpwd)
+
+            pa = p.getcpfriend(getnameid(ua))
+            pb = p.getcpfriend(getnameid(ub))
+            pp = set(pa.keys()) & set(pb.keys())
+
+            f = []
+            for i in pp:
+                fff = {}
+                pcache = memcache.get(pa[i]['nick_name'].upper())
+                if pcache is None:
+                    fff['nick_name'] = pa[i]['nick_name']
+                else:
+                    fff['uid'] = pcache['uid']
+                    fff['avatar'] = pcache['avatar']
+                    fff['nick_name'] = pcache['nick_name']
+                f.append(fff)
+            pchart = chartcofri(len(pa),len(pb),len(pp),ua,ub)
+            p = {'pa':ua,'pb':ub,'pchart':pchart}
+            self.response.out.write(template.render('hh_friendcc.htm',{'f':f,'p':p}))
+        except:
+            self.redirect('/oops')
+
+class friccc(webapp.RequestHandler):
+    def get(self):
+        u = self.request.get('u').replace('/','')
+        u = u.replace(' ','')
+        a = u.split('|')
+        self.redirect('/fricc?ua=%s&ub=%s' % (a[0],a[1]))
+
 class vote(webapp.RequestHandler):
     def get(self):
         u = self.request.get('u').replace('/','')
@@ -172,6 +226,9 @@ class fls(webapp.RequestHandler):
 def main():
     application = webapp.WSGIApplication([('/', MainHandler),
                                                         ('/friends',seeallfriend),
+                                                        ('/co-friends',friccindex),
+                                                        ('/fricc',fricc),
+                                                        ('/friccc',friccc),
                                                         ('/avatar',showavatar),
                                                         ('/talk',vote),
                                                         ('/push',push),
@@ -224,6 +281,14 @@ def printpic(x):
     #else:
         #y.append('')
     return y
+
+def chartcofri(a,b,c,ta,tb):
+    total = 100/max(a,b)
+    pa = int(a * total)
+    pb = int(b * total)
+    pc = int(c * total)
+    re = """http://chart.apis.google.com/chart?cht=v&chs=500x400&chd=t:%s,%s,0,%s&chdl=%s (%s)|%s (%s)|Co-friends(%s)&chtt=%s and %s's Plurk co-friends""" % (pa,pb,pc,ta,a,tb,b,c,ta,tb)
+    return re
 
 if __name__ == '__main__':
     main()

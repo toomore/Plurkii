@@ -130,7 +130,7 @@ class fricc(webapp.RequestHandler):
         ua = ua.replace(' ','')
         ub = ub.replace(' ','')
         
-        if len(ua) or len(ub):
+        if len(ua) and len(ub):
             p = plurkapi.PlurkAPI()
         else:
             self.redirect('/oops')

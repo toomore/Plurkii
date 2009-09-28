@@ -7,7 +7,7 @@ from google.appengine.ext import webapp
 from google.appengine.api import memcache
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import template
-import plurkapi,time,random,urllib2,re,robot
+import plurkapi,time,random,urllib2,re,robot,datamodel
 
 
 class MainHandler(webapp.RequestHandler):
@@ -55,6 +55,10 @@ class MainHandler(webapp.RequestHandler):
                     memcache.add(u.upper(), tv,604800)
                 else:
                     tv = value
+                indataplurk = datamodel.userplurkdata(key_name = str(tv['uid']),
+                                                        uname = str(tv['nick_name']),
+                                                        avatar = int(tv['avatar']))
+                indataplurk.put()
                 self.response.out.write(template.render('hh_firstpage.htm',{'tv':tv}))
             except:
                 self.redirect('/oops')
@@ -158,8 +162,10 @@ class fricc(webapp.RequestHandler):
                 f.append(fff)
             pchart = chartcofri(len(pa),len(pb),len(pp),ua,ub)
             p = {'pa':ua,'pb':ub,'pchart':pchart}
-            import datamodel
-            indata = datamodel.datacofriend(uaname = ua,uaid = getnameid(ua),ubname = ub,ubid = getnameid(ub))
+            indata = datamodel.datacofriend(uaname = ua,
+                                            uaid = getnameid(ua),
+                                            ubname = ub,
+                                            ubid = getnameid(ub))
             indata.put()
             self.response.out.write(template.render('hh_friendcc.htm',{'f':f,'p':p}))
         except:

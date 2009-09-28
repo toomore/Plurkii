@@ -6,3 +6,8 @@ class datacofriend(db.Model):
     ubname = db.StringProperty()
     ubid = db.IntegerProperty()
     uindate = db.DateTimeProperty(auto_now_add = True)
+
+class userplurkdata(db.Model):
+    uname = db.StringProperty()
+    avatar = db.IntegerProperty()
+    uindate = db.DateTimeProperty(auto_now_add = True)

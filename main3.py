@@ -158,6 +158,9 @@ class fricc(webapp.RequestHandler):
                 f.append(fff)
             pchart = chartcofri(len(pa),len(pb),len(pp),ua,ub)
             p = {'pa':ua,'pb':ub,'pchart':pchart}
+            import datamodel
+            indata = datamodel.datacofriend(uaname = ua,uaid = getnameid(ua),ubname = ub,ubid = getnameid(ub))
+            indata.put()
             self.response.out.write(template.render('hh_friendcc.htm',{'f':f,'p':p}))
         except:
             self.redirect('/oops')

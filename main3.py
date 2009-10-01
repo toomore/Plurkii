@@ -10,6 +10,7 @@ from google.appengine.ext.webapp import template
 import time,random,urllib2,re,datamodel,datetime
 import plurkapi,robot,application
 
+class PlurkError(Exception): pass
 
 class MainHandler(webapp.RequestHandler):
     def get(self):
@@ -28,22 +29,25 @@ class MainHandler(webapp.RequestHandler):
                 botid,botpwd = robot.robot()
                 pp.login(botid,botpwd)
             except:
-                pass
+                raise PlurkError, 'login fault.'
+            tv = {}
+            u = self.request.get('u').replace('/','')
+            u = u.replace(' ','')
+            value = memcache.get(u.upper())
             try:
-                tv = {}
-                u = self.request.get('u').replace('/','')
-                u = u.replace(' ','')
-                value = memcache.get(u.upper())
                 if value is None:
                     dd = pp.uidToUserinfo(getnameid(u))
-                    if dd['avatar'] is None : dd['avatar'] = ''
-                    if dd['date_of_birth'] is None:
-                        databirthday = None
-                    else:
-                        dd['date_of_birth'] = dd['date_of_birth'][5:-13]
-                        day,mon,year = dd['date_of_birth'].split(' ')                        
-                        mons = {'Jan':1,'Feb':2,'Mar':3,'Apr':4,'May':5,'Jun':6,'Jul':7,'Aug':8,'Sep':9,'Oct':10,'Nov':11,'Dec':12}
-                        databirthday = datetime.date(int(year),int(mons[mon]),int(day))
+                    try:
+                        if dd['avatar'] is None : dd['avatar'] = ''
+                        if dd['date_of_birth'] is None:
+                            databirthday = None
+                        else:
+                            dd['date_of_birth'] = dd['date_of_birth'][5:-13]
+                            day,mon,year = dd['date_of_birth'].split(' ')                        
+                            mons = {'Jan':1,'Feb':2,'Mar':3,'Apr':4,'May':5,'Jun':6,'Jul':7,'Aug':8,'Sep':9,'Oct':10,'Nov':11,'Dec':12}
+                            databirthday = datetime.date(int(year),int(mons[mon]),int(day))
+                    except:
+                        raise PlurkError, 'cal date fault.'
                     '''
                     for v in dd:
                         self.response.out.write("- %s:%s<br>" % (v,dd[v]))
@@ -61,18 +65,21 @@ class MainHandler(webapp.RequestHandler):
                     tv['gender'] = dd.get('gender','(no)')
                     tv['timezone'] = dd.get('timezone','(no)')
                     tv['avatar'] = dd.get('avatar','(no)')
+                    try:
+                        indataplurk = datamodel.userplurkdata(
+                                                key_name = str(tv['uid']),
+                                                uname = str(tv['nick_name']),
+                                                fullname = unicode(tv['full_name']),
+                                                karma = int(tv['karma']),
+                                                avatar = int(tv['avatar']),
+                                                gender = int(tv['gender']),
+                                                location = unicode(tv['location']),
+                                                birthday = databirthday
+                                                )
+                        indataplurk.put()
+                    except:
+                        raise PlurkError, 'indata fault.'
                     memcache.add(u.upper(), tv,604800)
-                    indataplurk = datamodel.userplurkdata(
-                                                            key_name = str(tv['uid']),
-                                                            uname = str(tv['nick_name']),
-                                                            fullname = str(tv['full_name']),
-                                                            karma = int(tv['karma']),
-                                                            avatar = int(tv['avatar']),
-                                                            gender = int(tv['gender']),
-                                                            location = str(tv['location']),
-                                                            birthday = databirthday
-                                                            )
-                    indataplurk.put()
                 else:
                     tv = value
                 self.response.out.write(template.render('hh_firstpage.htm',{'tv':tv}))
@@ -178,10 +185,12 @@ class fricc(webapp.RequestHandler):
                 f.append(fff)
             pchart = chartcofri(len(pa),len(pb),len(pp),ua,ub)
             p = {'pa':ua,'pb':ub,'pchart':pchart}
-            indata = datamodel.datacofriend(uaname = ua,
-                                            uaid = getnameid(ua),
+            indata = datamodel.datacofriend(
+                                            uaname = ua,
+                                            uaid = int(getnameid(ua)),
                                             ubname = ub,
-                                            ubid = getnameid(ub))
+                                            ubid = int(getnameid(ub))
+                                            )
             indata.put()
             self.response.out.write(template.render('hh_friendcc.htm',{'f':f,'p':p}))
         except:

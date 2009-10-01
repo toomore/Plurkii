@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from google.appengine.ext import db
-import plurkapi,robot,datamodel,urllib2,re,random,datetime
+import urllib2,re,random,datetime
+import plurkapi,robot,datamodel
 
 class PlurkError(Exception): pass
 
@@ -53,11 +54,11 @@ def crondata(u = None,uid = None):
             indataplurk = datamodel.userplurkdata(
                                                     key_name = str(tv['uid']),
                                                     uname = str(tv['nick_name']),
-                                                    fullname = str(tv['full_name']),
+                                                    fullname = unicode(tv['full_name']),
                                                     karma = int(tv['karma']),
                                                     avatar = int(tv['avatar']),
                                                     gender = int(tv['gender']),
-                                                    location = str(tv['location']),
+                                                    location = unicode(tv['location']),
                                                     birthday = databirthday
                                                     )
             indataplurk.put()

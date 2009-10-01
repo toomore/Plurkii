@@ -252,7 +252,7 @@ class PlurkAPI:
 
     _plurk_paths = {
         'http_base'             : 'http://www.plurk.com',
-        'login'                 : 'http://www.plurk.com/Users/login?redirect_page=main',
+        'login'                 : 'http://www.plurk.com/Users/login',
         'getCompletion'         : 'http://www.plurk.com/Users/getCompletion',
         'plurk_add'             : 'http://www.plurk.com/TimeLine/addPlurk',
         'plurk_respond'         : 'http://www.plurk.com/Responses/add',

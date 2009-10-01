@@ -23,6 +23,13 @@ input{
         padding: 1px;
         font-size:10pt;
         color:#778899;}
+.rdu {
+        font-size:10pt;}
+.rdu a {
+        color:#ccddcc;
+        text-decoration: none;}
+.rdu a:hover{
+        color:#4444bb}
 .con {
         font-size:10pt;}
 .mimg{

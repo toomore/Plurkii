@@ -1,5 +1,5 @@
 application: plurkii
-version: airplain 
+version: bicycle 
 runtime: python
 api_version: 1
 
@@ -32,6 +32,12 @@ handlers:
 - url: /css/(.*)
   static_files: static/css/\1
   upload: static/css/(.*)
+- url: /crondata
+  script: crondata.py
+  login: admin
+- url: /application
+  script: application.py
+  login: admin
 - url: .*
   script: main3.py
   #secure: always

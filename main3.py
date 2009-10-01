@@ -7,7 +7,8 @@ from google.appengine.ext import webapp
 from google.appengine.api import memcache
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import template
-import plurkapi,time,random,urllib2,re,robot,datamodel
+import time,random,urllib2,re,datamodel,datetime
+import plurkapi,robot,application
 
 
 class MainHandler(webapp.RequestHandler):
@@ -15,7 +16,12 @@ class MainHandler(webapp.RequestHandler):
         #d = pp.getPlurks()
         #self.response.out.write(d)
         if self.request.get('u') == '' or self.request.get('u') == None:
-            self.response.out.write(template.render('h_index.htm',{}))
+            #show Index.
+            try:
+                tv = {'tip' : application.randuser()}
+                self.response.out.write(template.render('h_index.htm',{'tv':tv}))
+            except:
+                self.redirect('/')
         else:
             try:
                 pp = plurkapi.PlurkAPI()
@@ -32,9 +38,12 @@ class MainHandler(webapp.RequestHandler):
                     dd = pp.uidToUserinfo(getnameid(u))
                     if dd['avatar'] is None : dd['avatar'] = ''
                     if dd['date_of_birth'] is None:
-                        pass
+                        databirthday = None
                     else:
                         dd['date_of_birth'] = dd['date_of_birth'][5:-13]
+                        day,mon,year = dd['date_of_birth'].split(' ')                        
+                        mons = {'Jan':1,'Feb':2,'Mar':3,'Apr':4,'May':5,'Jun':6,'Jul':7,'Aug':8,'Sep':9,'Oct':10,'Nov':11,'Dec':12}
+                        databirthday = datetime.date(int(year),int(mons[mon]),int(day))
                     '''
                     for v in dd:
                         self.response.out.write("- %s:%s<br>" % (v,dd[v]))
@@ -53,12 +62,19 @@ class MainHandler(webapp.RequestHandler):
                     tv['timezone'] = dd.get('timezone','(no)')
                     tv['avatar'] = dd.get('avatar','(no)')
                     memcache.add(u.upper(), tv,604800)
+                    indataplurk = datamodel.userplurkdata(
+                                                            key_name = str(tv['uid']),
+                                                            uname = str(tv['nick_name']),
+                                                            fullname = str(tv['full_name']),
+                                                            karma = int(tv['karma']),
+                                                            avatar = int(tv['avatar']),
+                                                            gender = int(tv['gender']),
+                                                            location = str(tv['location']),
+                                                            birthday = databirthday
+                                                            )
+                    indataplurk.put()
                 else:
                     tv = value
-                indataplurk = datamodel.userplurkdata(key_name = str(tv['uid']),
-                                                        uname = str(tv['nick_name']),
-                                                        avatar = int(tv['avatar']))
-                indataplurk.put()
                 self.response.out.write(template.render('hh_firstpage.htm',{'tv':tv}))
             except:
                 self.redirect('/oops')

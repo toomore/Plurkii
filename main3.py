@@ -7,7 +7,8 @@ from google.appengine.ext import webapp
 from google.appengine.api import memcache
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import template
-import plurkapi,time,random,urllib2,re,robot,datamodel,datetime
+import time,random,urllib2,re,datamodel,datetime
+import plurkapi,robot,application
 
 
 class MainHandler(webapp.RequestHandler):
@@ -15,7 +16,12 @@ class MainHandler(webapp.RequestHandler):
         #d = pp.getPlurks()
         #self.response.out.write(d)
         if self.request.get('u') == '' or self.request.get('u') == None:
-            self.response.out.write(template.render('h_index.htm',{}))
+            #show Index.
+            try:
+                tv = {'tip' : application.randuser()}
+                self.response.out.write(template.render('h_index.htm',{'tv':tv}))
+            except:
+                self.redirect('/')
         else:
             try:
                 pp = plurkapi.PlurkAPI()

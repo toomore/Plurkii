@@ -35,6 +35,9 @@ handlers:
 - url: /crondata
   script: crondata.py
   login: admin
+- url: /application
+  script: application.py
+  login: admin
 - url: .*
   script: main3.py
   #secure: always

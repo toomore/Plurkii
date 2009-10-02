@@ -239,6 +239,26 @@ class friccc(webapp.RequestHandler):
         a = u.split('|')
         self.redirect('/fricc?ua=%s&ub=%s' % (a[0],a[1]))
 
+class girls(webapp.RequestHandler):
+    """ Girls Wall
+    """
+    def get(self):
+        tv =    {
+                'title':'Girls',
+                'content':application.getwall()
+                }
+        self.response.out.write(template.render('hh_wall.htm',{'tv':tv}))
+
+class boys(webapp.RequestHandler):
+    """ Boys Wall
+    """
+    def get(self):
+        tv =    {
+                'title':'Boys',
+                'content':application.getwall(1)
+                }
+        self.response.out.write(template.render('hh_wall.htm',{'tv':tv}))
+
 class vote(webapp.RequestHandler):
     """ User talk and vote page.
     """
@@ -320,6 +340,8 @@ def main():
                                                         ('/co-friends',friccindex),
                                                         ('/fricc',fricc),
                                                         ('/friccc',friccc),
+                                                        ('/girls',girls),
+                                                        ('/boys',boys),
                                                         ('/avatar',showavatar),
                                                         ('/talk',vote),
                                                         ('/push',push),

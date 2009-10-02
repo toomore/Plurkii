@@ -13,17 +13,23 @@ import plurkapi,robot,application
 class PlurkError(Exception): pass
 
 class MainHandler(webapp.RequestHandler):
+    """
+    Index page, If u is None,show the search input page.
+    Else show the user information page.    
+    """
     def get(self):
         #d = pp.getPlurks()
         #self.response.out.write(d)
+
         if self.request.get('u') == '' or self.request.get('u') == None:
-            #show Index.
+            ## Show Index.
             try:
                 tv = {'tip' : application.randuser()}
                 self.response.out.write(template.render('h_index.htm',{'tv':tv}))
             except:
                 self.redirect('/')
         else:
+            ## Show user information page.
             try:
                 pp = plurkapi.PlurkAPI()
                 botid,botpwd = robot.robot()
@@ -35,9 +41,12 @@ class MainHandler(webapp.RequestHandler):
             u = u.replace(' ','')
             value = memcache.get(u.upper())
             try:
+                ## Check the user wherether cached.
                 if value is None:
+                    ## No cache and create the new one.
                     dd = pp.uidToUserinfo(getnameid(u))
                     try:
+                        ## Solute avatar,date_of_birthday format problems.
                         if dd['avatar'] is None : dd['avatar'] = ''
                         if dd['date_of_birth'] is None:
                             databirthday = None
@@ -53,6 +62,7 @@ class MainHandler(webapp.RequestHandler):
                         self.response.out.write("- %s:%s<br>" % (v,dd[v]))
                     self.response.out.write("+---------------------------+")
                     '''
+                    ## Base data formate.
                     tv['display_name'] = dd.get('display_name','(no)')
                     tv['uid'] = dd.get('uid','(no)')
                     tv['relationship'] = dd.get('relationship','(no)')
@@ -66,12 +76,18 @@ class MainHandler(webapp.RequestHandler):
                     tv['timezone'] = dd.get('timezone','(no)')
                     tv['avatar'] = dd.get('avatar','(no)')
                     try:
+                        try:
+                            ## convert avatar to int or 0.
+                            avatar = int(tv['avatar'])
+                        except:
+                            avatar = 0
+                        ## store into data.
                         indataplurk = datamodel.userplurkdata(
                                                 key_name = str(tv['uid']),
                                                 uname = str(tv['nick_name']),
                                                 fullname = unicode(tv['full_name']),
                                                 karma = int(tv['karma']),
-                                                avatar = int(tv['avatar']),
+                                                avatar = avatar,
                                                 gender = int(tv['gender']),
                                                 location = unicode(tv['location']),
                                                 birthday = databirthday
@@ -81,12 +97,16 @@ class MainHandler(webapp.RequestHandler):
                         raise PlurkError, 'indata fault.'
                     memcache.add(u.upper(), tv,604800)
                 else:
+                    ## user informations has cached. Direct use memcache value.
                     tv = value
                 self.response.out.write(template.render('hh_firstpage.htm',{'tv':tv}))
             except:
+                ## All fault go to '/oops' page.
                 self.redirect('/oops')
 
 class showavatar(webapp.RequestHandler):
+    """ Show user all avatars.
+    """
     def get(self):
         u = self.request.get('u').replace('/','')
         u = u.replace(' ','')
@@ -103,27 +123,34 @@ class showavatar(webapp.RequestHandler):
 
 
 class seeallfriend(webapp.RequestHandler):
+    """ Show user all friends.
+        If get too many friends, loading will be fault and then will show refresh page to try again.
+    """
     def get(self):
         u = self.request.get('u').replace('/','')
         u = u.replace(' ','')
         try:
             tv = memcache.get(u.upper())
             if tv is None:
+                ## If no cache data, return to user info. page to start up.
                 self.redirect('/?u=%s' % u)
             else:
                 p = plurkapi.PlurkAPI()
                 try:
+                    ## Login
                     botid,botpwd = robot.robot()
                     p.login(botid,botpwd)
                 except:
+                    ## If login fault, go to refresh to try again.
                     url = '/friends?u=%s' % u
                     re = {'url':url}
                     self.response.out.write(template.render('hh_refresh.htm',{'re':re}))
-                #friends cache
+                ## Friends cache
                 getcache = memcache.get("f_%s" % u.upper())
                 if getcache is None:
                     ff = p.getcpfriend(getnameid(u))
                     f = []
+                    ## Chech all friends if cached.
                     for i in ff:
                         fff = {}
                         pcache = memcache.get(ff[i]['nick_name'].upper())
@@ -139,18 +166,24 @@ class seeallfriend(webapp.RequestHandler):
                     f = getcache
                 self.response.out.write(template.render('hh_friend.htm',{'f':f,'tv':tv}))
         except:
-            #self.redirect('/oops')
+            ## If loading fault, go to refresh to try again.
             url = '/friends?u=%s' % u
             re = {'url':url}
             self.response.out.write(template.render('hh_refresh.htm',{'re':re}))
 
 class friccindex(webapp.RequestHandler):
+    """ Co-friends Index page.
+        parma. 'u' for default a user for one.
+    """
     def get(self):
         u = self.request.get('u').replace('/','')
         tv = {'nick_name': u}
         self.response.out.write(template.render('h_friccindex.htm',{'tv':tv}))
 
 class fricc(webapp.RequestHandler):
+    """ Show co-friends page.
+        parma. ua,ub for two users.
+    """
     def get(self):
         ua = self.request.get('ua').replace('/','')
         ub = self.request.get('ub').replace('/','')
@@ -197,13 +230,38 @@ class fricc(webapp.RequestHandler):
             self.redirect('/oops')
 
 class friccc(webapp.RequestHandler):
+    """ For co-friends tinyurl.
+        '/friccc?u={{ua}}|{{ub}}'
+    """
     def get(self):
         u = self.request.get('u').replace('/','')
         u = u.replace(' ','')
         a = u.split('|')
         self.redirect('/fricc?ua=%s&ub=%s' % (a[0],a[1]))
 
+class girls(webapp.RequestHandler):
+    """ Girls Wall
+    """
+    def get(self):
+        tv =    {
+                'title':'Girls',
+                'content':application.getwall()
+                }
+        self.response.out.write(template.render('hh_wall.htm',{'tv':tv}))
+
+class boys(webapp.RequestHandler):
+    """ Boys Wall
+    """
+    def get(self):
+        tv =    {
+                'title':'Boys',
+                'content':application.getwall(1)
+                }
+        self.response.out.write(template.render('hh_wall.htm',{'tv':tv}))
+
 class vote(webapp.RequestHandler):
+    """ User talk and vote page.
+    """
     def get(self):
         u = self.request.get('u').replace('/','')
         u = u.replace(' ','')
@@ -217,40 +275,58 @@ class vote(webapp.RequestHandler):
             self.redirect('/?u=%s' % u)
 
 class push(webapp.RequestHandler):
+    """ PUSH page.
+    """
     def get(self):
         self.response.out.write(template.render('hh_push.htm',{}))
 
 class searchuser(webapp.RequestHandler):
+    """ Search user info. from Google page.
+    """
     def get(self):
         self.response.out.write(template.render('hh_aboutuser.htm',{}))
 
 class about(webapp.RequestHandler):
+    """ Plurkii about page.
+    """
     def get(self):
         self.response.out.write(template.render('hh_about.htm',{}))
 
 class contact(webapp.RequestHandler):
+    """ Contact page.
+    """
     def get(self):
         self.response.out.write(template.render('hh_contact.htm',{}))
 
 class promote(webapp.RequestHandler):
+    """ Promote Plurkii page.
+    """
     def get(self):
         self.response.out.write(template.render('hh_promote.htm',{}))
 
 class oops(webapp.RequestHandler):
+    """ Page fault show page.
+    """
     def get(self):
         self.response.out.write(template.render('hh_oops.htm',{}))
 
 class oopspage(webapp.RequestHandler):
+    """ All no default page will redirection to '/oops'
+    """
     def get(self):
         self.redirect('/oops')
 
 class getmemstats(webapp.RequestHandler):
+    """ Show memcache info.
+    """
     def get(self):
         g = memcache.get_stats()
         for i in g:
             self.response.out.write(' - %s:%s<br>' % (i,g[i]))
 
 class fls(webapp.RequestHandler):
+    """ Clean/reset memcache
+    """
     def get(self):
         if memcache.flush_all():
             self.response.out.write("flush_all OK!")
@@ -258,11 +334,14 @@ class fls(webapp.RequestHandler):
             self.response.out.write("ERROR!!")
 
 def main():
+    """ Start up. """
     application = webapp.WSGIApplication([('/', MainHandler),
                                                         ('/friends',seeallfriend),
                                                         ('/co-friends',friccindex),
                                                         ('/fricc',fricc),
                                                         ('/friccc',friccc),
+                                                        ('/girls',girls),
+                                                        ('/boys',boys),
                                                         ('/avatar',showavatar),
                                                         ('/talk',vote),
                                                         ('/push',push),
@@ -277,6 +356,7 @@ def main():
     run_wsgi_app(application)
 
 def getnameid(name):
+    """ Get Plurk user id by nickname. """
     q = name.replace('/','')
     q = q.replace(' ','')
     try:
@@ -302,6 +382,7 @@ def getnameid(name):
         return rr
 
 def printpic(x):
+    """ Print out pic list. """
     try:                
         x = int(x)
     except:
@@ -317,6 +398,7 @@ def printpic(x):
     return y
 
 def chartcofri(a,b,c,ta,tb):
+    """ Print out co-friends chart. """
     total = 100/max(a,b)
     pa = int(a * total)
     pb = int(b * total)

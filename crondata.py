@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""
+A Cron for robot to cache user info.
+About cron frequency please view cron.yaml
+"""
 
 from google.appengine.ext import db
 import urllib2,re,random,datetime
@@ -8,6 +12,8 @@ import plurkapi,robot,datamodel
 class PlurkError(Exception): pass
 
 def crondata(u = None,uid = None):
+    """ Use by uid or nickname.
+    """
     try:
         pp = plurkapi.PlurkAPI()
         botid,botpwd = robot.robot()
@@ -16,6 +22,7 @@ def crondata(u = None,uid = None):
         raise PlurkError, 'login fault.'
     tv = {}
     try:
+        ## To know uid or nickname.
         if uid is None:
             u = u.replace('/','')
             u = u.replace(' ','')
@@ -51,12 +58,16 @@ def crondata(u = None,uid = None):
         tv['timezone'] = dd.get('timezone','(no)')
         tv['avatar'] = dd.get('avatar','(no)')
         try:
+            avatar = int(tv['avatar'])
+        except:
+            avatar = 0
+        try:
             indataplurk = datamodel.userplurkdata(
                                                     key_name = str(tv['uid']),
                                                     uname = str(tv['nick_name']),
                                                     fullname = unicode(tv['full_name']),
                                                     karma = int(tv['karma']),
-                                                    avatar = int(tv['avatar']),
+                                                    avatar = avatar,
                                                     gender = int(tv['gender']),
                                                     location = unicode(tv['location']),
                                                     birthday = databirthday

@@ -26,10 +26,14 @@ input{
 .rdu {
         font-size:10pt;}
 .rdu a {
-        color:#ccddcc;
+        color:#ddeedd;
         text-decoration: none;}
 .rdu a:hover{
-        color:#4444bb}
+        color:#4444bb;
+        font-weight: bold;}
+.wall img{
+        border:0px;
+        width:86px;}
 .con {
         font-size:10pt;}
 .mimg{

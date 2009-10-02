@@ -234,9 +234,10 @@ class PlurkAPI:
             return self._friends[uid]['nick_name']
         else:
             return 'User %s' % uid
-
+    ## Will be fault by 'var GLOBAL = {"page_user": {}}'
+    '''
     def search(self,query):
-        """ Search key world """
+        """ Search key word """
         post = urllib.urlencode({ 'query': query })
         response = urllib2.urlopen(self._plurk_paths['search'], post )
         page = response.read()
@@ -244,6 +245,17 @@ class PlurkAPI:
         # simplejson doesn't create Date objects.
         date_pat = re.compile(': new Date\((\".+?\")\)')
         return simplejson.loads(re.sub(date_pat, ': \g<1>', page))
+    '''
+    def search(self,query):
+        """ Search key word from user serch
+            http://www.plurk.com/Search/queryUsers?q=
+        """
+        post = urllib.urlencode({ 'q': query })
+        response = urllib2.urlopen(self._plurk_paths['search2'], post )
+        page = response.read()
+        date_pat = re.compile(': new Date\((\".+?\")\)')
+        return simplejson.loads(re.sub(date_pat, ': \g<1>', page))
+
 
     uid = property(lambda self: self._uid)
     logged_in = property(lambda self: self._logged_in)
@@ -272,7 +284,8 @@ class PlurkAPI:
         'friends_get_blocked'   : 'http://www.plurk.com/Friends/getBlockedByOffset',
         'user_get_info'         : 'http://www.plurk.com/Users/fetchUserInfo',
         'remove_friend'         : 'http://www.plurk.com/Users/removeFriend',
-        'search'                : 'http://www.plurk.com/Search/queryPlurks'
+        'search'                : 'http://www.plurk.com/Search/queryPlurks',
+        'search2'               : 'http://www.plurk.com/Search/queryUsers'
     }
 
     _qualifiers = { 'en': (':', 'loves',  'likes', 'shares', 'gives', 'hates', 'wants', 'wishes',

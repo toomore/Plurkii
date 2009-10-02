@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""
+Put all application function.
+"""
+
 from google.appengine.ext import db
 import datamodel,random
 
 def randuser(mod = None):
-    """random to show user. """
+    """ random to show user. """
     ru = datamodel.userplurkdata.all()
     result = ru.fetch(5,random.randrange(1,ru.count()-5))
     a = ''

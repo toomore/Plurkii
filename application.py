@@ -31,7 +31,7 @@ def getwall(gender = 0,pernum = 126):
     if gender:
         cache = memcache.get('boywalls')
     else:
-        cache = memcache.get('girlwall')
+        cache = memcache.get('girlwalls')
     if cache is not None:
         return cache
     else:

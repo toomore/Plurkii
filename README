@@ -1,5 +1,21 @@
 Plurkii!
-- http://plurkii.appspot.com/
-- Google App Engine
-- version: tank
-  For girls/boys wall...
+Search your friends or fans's avatars.
+http://plurkii.appspot.com/ 
+
+===== Install =====
+python 2.6
+
+Google App Engine
+- Change app.yaml to your project id.
+
+Google Friend Connect
+- You need to change the ID:div-514271632037780565,site:07645093818874055760 to yours.
+
+Google Analytics
+- Change the analytic key.
+
+Register some Plurk ID for working.
+- You need to register some Plurk ID for caching user information,and put those ID/PWD into robot.iirobot datastore.
+
+===== Know issues =====
+1. Boys and Girls Wall use CPU too much.

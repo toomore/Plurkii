@@ -55,7 +55,7 @@ def getwall(gender = 0,pernum = 126):
                 avatar = '/images/face-angel.png'
             a = a + "<a href='/?u=%s'><img alt='%s' src='%s'></a>" % (i.uname,i.uname,avatar)
         if gender:
-            memcache.add('boywalls',a,60*3)
+            memcache.add('boywalls',a,60*6)
         else:
-            memcache.add('girlwalls',a,60*3)
+            memcache.add('girlwalls',a,60*6)
         return a

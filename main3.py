@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-from __future__ import division
+""" Main WSGI. """
 
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import template
-import time,random,urllib2,re,datamodel,datetime
-import plurkapi,robot,application
+import datamodel,datetime,random
+import application,plurkapi,robot
 
 class PlurkError(Exception): pass
 
@@ -44,7 +43,7 @@ class MainHandler(webapp.RequestHandler):
                 ## Check the user wherether cached.
                 if value is None:
                     ## No cache and create the new one.
-                    dd = pp.uidToUserinfo(getnameid(u))
+                    dd = pp.uidToUserinfo(application.getnameid(u))
                     try:
                         ## Solute avatar,date_of_birthday format problems.
                         if dd['avatar'] is None : dd['avatar'] = ''
@@ -116,7 +115,7 @@ class showavatar(webapp.RequestHandler):
             if tv is None:
                 self.redirect('/?u=%s' % u)
             else:
-                p['piclist'] = printpic(tv['avatar'])
+                p['piclist'] = application.printpic(tv['avatar'])
                 self.response.out.write(template.render('hh_avatar.htm',{'tv':tv,'p':p}))
         except:
             self.redirect('/?u=%s' % u)
@@ -148,7 +147,7 @@ class seeallfriend(webapp.RequestHandler):
                 ## Friends cache
                 getcache = memcache.get("f_%s" % u.upper())
                 if getcache is None:
-                    ff = p.getcpfriend(getnameid(u))
+                    ff = p.getcpfriend(application.getnameid(u))
                     f = []
                     ## Chech all friends if cached.
                     for i in ff:
@@ -201,8 +200,8 @@ class fricc(webapp.RequestHandler):
             botid,botpwd = robot.robot()
             p.login(botid,botpwd)
 
-            pa = p.getcpfriend(getnameid(ua))
-            pb = p.getcpfriend(getnameid(ub))
+            pa = p.getcpfriend(application.getnameid(ua))
+            pb = p.getcpfriend(application.getnameid(ub))
             pp = set(pa.keys()) & set(pb.keys())
 
             f = []
@@ -216,13 +215,13 @@ class fricc(webapp.RequestHandler):
                     fff['avatar'] = pcache['avatar']
                     fff['nick_name'] = pcache['nick_name']
                 f.append(fff)
-            pchart = chartcofri(len(pa),len(pb),len(pp),ua,ub)
+            pchart = application.chartcofri(len(pa),len(pb),len(pp),ua,ub)
             p = {'pa':ua,'pb':ub,'pchart':pchart}
             indata = datamodel.datacofriend(
                                             uaname = ua,
-                                            uaid = int(getnameid(ua)),
+                                            uaid = int(application.getnameid(ua)),
                                             ubname = ub,
-                                            ubid = int(getnameid(ub))
+                                            ubid = int(application.getnameid(ub))
                                             )
             indata.put()
             self.response.out.write(template.render('hh_friendcc.htm',{'f':f,'p':p}))
@@ -326,6 +325,7 @@ class oopspage(webapp.RequestHandler):
     def get(self):
         self.redirect('/oops')
 
+## system info. page.
 class getmemstats(webapp.RequestHandler):
     """ Show memcache info.
     """
@@ -365,57 +365,6 @@ def main():
                                                         ('/oops',oops),
                                                         ('/.*',oopspage)],debug=True)
     run_wsgi_app(application)
-
-def getnameid(name):
-    """ Get Plurk user id by nickname. """
-    q = name.replace('/','')
-    q = q.replace(' ','')
-    try:
-        pp = plurkapi.PlurkAPI()
-        botid,botpwd = robot.robot()
-        pp.login(botid,botpwd)
-        qqq = pp.search(q)
-        
-        for i in qqq['users']:
-            for k in qqq['users'][i]:
-                if qqq['users'][i]['nick_name'].upper() == q.upper() :
-                    rr = qqq['users'][i]['uid']
-        return rr
-    except:
-        response = urllib2.urlopen('http://www.plurk.com/%s' % q)
-        page = response.read()
-        uid_pat = re.compile('var SETTINGS = \{.*"user_id": ([\d]+),.*\}')
-        matches = uid_pat.findall(page)
-        if len(matches):
-            rr = matches[0]
-        else:
-            raise PlurkError, "Could not find user_id."
-        return rr
-
-def printpic(x):
-    """ Print out pic list. """
-    try:                
-        x = int(x)
-    except:
-        x = 0
-    y = []
-    y.append(x)
-    while x > 0:
-        x = x -2
-        if x > 1:
-            y.append(x)
-    #else:
-        #y.append('')
-    return y
-
-def chartcofri(a,b,c,ta,tb):
-    """ Print out co-friends chart. """
-    total = 100/max(a,b)
-    pa = int(a * total)
-    pb = int(b * total)
-    pc = int(c * total)
-    re = """http://chart.apis.google.com/chart?cht=v&chs=500x400&chd=t:%s,%s,0,%s&chdl=%s (%s)|%s (%s)|Co-friends(%s)&chtt=%s and %s's Plurk co-friends""" % (pa,pb,pc,ta,a,tb,b,c,ta,tb)
-    return re
 
 if __name__ == '__main__':
     main()

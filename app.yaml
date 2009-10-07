@@ -4,40 +4,55 @@ runtime: python
 api_version: 1
 
 handlers:
-#- url: /testiicron
-#  script: testcron.py
+## Favion url.
 - url: /favicon\.ico
   static_files: static/images/favicon.ico
   upload: static/images/favicon.ico
   mime_type: image/x-icon
+
+## Images files.
 - url: /images
   static_dir: static/images
 - url: /images/(.*)
   static_files: static/images/\1
   upload: static/images/(.*)
+
+## Google Friends connect.
 - url: /canvas\.html
   static_files: static/canvas.html
   upload: static/canvas.html
 - url: /rpc_relay\.html
   static_files: static/rpc_relay.html
   upload: static/rpc_relay.html
+
+## Site map xml.
 - url: /sitemap\.xml
   static_files: static/sitemap.xml
   upload: static/sitemap.xml
+
+## Firefox add-ons extension.
 - url: /plurkiisearch\.xml
   static_files: static/plurkiisearch.xml
   upload: static/plurkiisearch.xml
+
+## CSS
 - url: /css
   static_dir: static/css
 - url: /css/(.*)
   static_files: static/css/\1
   upload: static/css/(.*)
+
+## Cron robot.
 - url: /crondata
   script: crondata.py
   login: admin
+
+## Application setting, for testing.
 - url: /application
   script: application.py
   login: admin
+
+## Main WSGI
 - url: .*
   script: main3.py
   #secure: always

@@ -15,7 +15,14 @@ Google Analytics
 - Change the analytic key.
 
 Register some Plurk ID for working.
-- You need to register some Plurk ID for caching user information,and put those ID/PWD into robot.iirobot datastore.
+- You need to register some Plurk ID for caching user information,and put those ID/PWD into robot.py > iirobot() datastore.
 
 ===== Know issues =====
 1. Boys and Girls Wall use CPU too much.
+
+===== Files =====
+main3.py
+
+plurkapi.py
+
+application.py

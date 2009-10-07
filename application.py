@@ -59,3 +59,19 @@ def getwall(gender = 0,pernum = 126):
         else:
             memcache.add('girlwalls',a,60*6)
         return a
+
+def karmawall(karma = 99):
+    kw = memcache.get('karmawall')
+    if kw is None:
+        kw = datamodel.userplurkdata.gql("where karma >= :1" ,karma)
+        a = ''
+        for i in kw:
+            if i.avatar:
+                avatar = 'http://avatars.plurk.com/%s-big%s.jpg' % (i.key().id_or_name(),i.avatar)
+            else:
+                avatar = '/images/face-angel.png'
+            a = a + "<a href='/?u=%s'><img alt='%s' src='%s'></a>" % (i.uname,i.uname,avatar)
+        memcache.add('karmawall',a,60*60*4)
+    else:
+        a = kw
+    return a

@@ -259,6 +259,16 @@ class boys(webapp.RequestHandler):
                 }
         self.response.out.write(template.render('hh_wall.htm',{'tv':tv}))
 
+class karma(webapp.RequestHandler):
+    """ karma Wall
+    """
+    def get(self):
+        tv =    {
+                'title':'Karma 100',
+                'content':application.karmawall()
+                }
+        self.response.out.write(template.render('hh_wall.htm',{'tv':tv}))
+
 class vote(webapp.RequestHandler):
     """ User talk and vote page.
     """
@@ -342,6 +352,7 @@ def main():
                                                         ('/friccc',friccc),
                                                         ('/girls',girls),
                                                         ('/boys',boys),
+                                                        ('/karma',karma),
                                                         ('/avatar',showavatar),
                                                         ('/talk',vote),
                                                         ('/push',push),

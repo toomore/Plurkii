@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Choice a robot by random from datastore.
-"""
+""" Choice a robot by random from datastore. """
 
 from google.appengine.ext import db
 import random

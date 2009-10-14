@@ -1,6 +1,9 @@
+""" Data property. """
+
 from google.appengine.ext import db
 
 class datacofriend(db.Model):
+    """save the result of a couple of co-friends """
     uaname = db.StringProperty()
     uaid = db.IntegerProperty()
     ubname = db.StringProperty()
@@ -8,6 +11,7 @@ class datacofriend(db.Model):
     uindate = db.DateTimeProperty(auto_now_add = True)
 
 class userplurkdata(db.Model):
+    """ User dases info. """
     uname = db.StringProperty()
     fullname = db.StringProperty()
     karma = db.IntegerProperty()

@@ -132,7 +132,7 @@ class PlurkAPI:
         # simplejson doesn't create Date objects.
         date_pat = re.compile('\"posted\": new Date\((\".+?\")\)')
         data = simplejson.loads(re.sub(date_pat, '"posted": \g<1>', page))
-        return data
+        return date
 
     def getPlurkResponses(self, plurk_id):
         """ Gets individual plurks by their ids. """

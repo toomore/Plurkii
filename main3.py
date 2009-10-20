@@ -34,7 +34,8 @@ class MainHandler(webapp.RequestHandler):
                 botid,botpwd = robot.robot()
                 pp.login(botid,botpwd)
             except:
-                raise PlurkError, 'login fault.' + botid
+                #raise PlurkError, 'login fault.'
+		self.redirect('/?u=%s' % self.request.get('u'))
             tv = {}
             u = self.request.get('u').replace('/','')
             u = u.replace(' ','')

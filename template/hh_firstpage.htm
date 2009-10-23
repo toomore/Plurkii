@@ -1,0 +1,42 @@
+{% extends "h_display.htm" %}
+
+{% block titlename %}[{{ tv.nick_name }}] - {% endblock %}
+
+{% block content %}
+        <img class="mimg" src="/images/face-{% if tv.gender %}glasses{% else %}kiss{% endif %}.png"> <b>{{ tv.nick_name }}</b><br>
+        <div class="app">
+            <!-- Include the Google Friend Connect javascript library. -->
+            <script type="text/javascript" src="http://www.google.com/friendconnect/script/friendconnect.js"></script>
+            <!-- Define the div tag where the gadget will be inserted. -->
+            <div id="div-4285321829074645335" style="width:100%;"></div>
+            <!-- Render the gadget into a div. -->
+            <script type="text/javascript">
+            var skin = {};
+            skin['HEIGHT'] = '21';
+            skin['BUTTON_STYLE'] = 'compact';
+            skin['BUTTON_TEXT'] = 'Push!';
+            skin['BUTTON_ICON'] = 'heart';
+            google.friendconnect.container.setParentUrl('/' /* location of rpc_relay.html and canvas.html */);
+            google.friendconnect.container.renderOpenSocialGadget(
+             { id: 'div-4285321829074645335',
+               url:'http://www.google.com/friendconnect/gadgets/recommended_pages.xml',
+               height: 21,
+               site: '07645093818874055760',
+               'view-params':{"pageUrl":"http://plurkii.appspot.com/?u={{ tv.nick_name }}","pageTitle":"{{ tv.nick_name }} - {% if tv.gender %}Boy{% else %}Girl{% endif %}","docId":"recommendedPages"}
+             },
+              skin);
+            </script>
+            <a href="/avatar?u={{ tv.nick_name }}"><img class="mimg" src="/images/emblem-photos.png"></a> <a href="/friends?u={{ tv.nick_name }}"><img class="mimg" src="/images/system-users.png"></a> <a href="/talk?u={{ tv.nick_name }}"><img class="mimg" src="/images/internet-group-chat.png"></a> <a href="/searchuser?q={{ tv.nick_name}} OR {{ tv.display_name}}"><img class="mimg" src="/images/system-search.png"></a> <a href="/co-friends?u={{ tv.nick_name }}"><img class="mimg" src="/images/folder-saved-search.png"></a>
+            <script type="text/javascript" src="http://w.sharethis.com/button/sharethis.js#publisher=3291d9a6-e901-4475-b36e-274bfeccaee5&amp;type=website&amp;style=rotate&amp;buttonText=;post_services=email%2Cfacebook%2Ctwitter%2Cfunp%2Cblogger%2Cfriendfeed%2Cgoogle_bmarks%2Cmyspace%2Cdigg%2Csms%2Cwindows_live%2Cdelicious%2Cstumbleupon%2Creddit%2Clinkedin%2Cbebo%2Cybuzz%2Cyahoo_bmarks%2Cmixx%2Ctechnorati%2Cpropeller%2Cwordpress%2Cnewsvine%2Cxanga"></script>
+        </div>
+        <img src="http://avatars.plurk.com/{{ tv.uid }}-big{{ tv.avatar }}.jpg"><br>
+        <a target="_blank" href="http://www.plurk.com/{{ tv.nick_name }}"><img class="mimg" src="http://www.plurk.com/favicon.ico"> {{ tv.display_name }}</a><br>
+        <i>{{ tv.full_name }}</i><br>
+        <img class="mimg" src="/images/application-certificate.png"> {{tv.uid}} <img class="mimg" src="/images/applications-system.png"> {{ tv.karma }}<br>
+        {% if tv.date_of_birth %}<img class="mimg" src="/images/office-calendar.png"> <a target="_blank" href="http://www.google.com/search?q={{ tv.date_of_birth }} birthday">{{ tv.date_of_birth }}</a><br>{% endif %}
+        {% if tv.location %}<img class="mimg" src="/images/internet-web-browser.png"> <i><a href="http://maps.google.com/?q={{ tv.location }} ({{ tv.nick_name}})">{{ tv.location }}</a></i><br>{% endif %}
+{% endblock %}
+
+{% block foot %}
+<div align="right">{% include "h_desc.htm" %}</div>
+{% endblock %}

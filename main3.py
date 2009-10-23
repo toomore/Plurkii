@@ -24,7 +24,7 @@ class MainHandler(webapp.RequestHandler):
             ## Show Index.
             try:
                 tv = {'tip' : application.randuser()}
-                self.response.out.write(template.render('h_index.htm',{'tv':tv}))
+                self.response.out.write(template.render('./template/h_index.htm',{'tv':tv}))
             except:
                 self.redirect('/')
         else:
@@ -34,7 +34,8 @@ class MainHandler(webapp.RequestHandler):
                 botid,botpwd = robot.robot()
                 pp.login(botid,botpwd)
             except:
-                raise PlurkError, 'login fault.'
+                #raise PlurkError, 'login fault.'
+		self.redirect('/?u=%s' % self.request.get('u'))
             tv = {}
             u = self.request.get('u').replace('/','')
             u = u.replace(' ','')
@@ -98,7 +99,7 @@ class MainHandler(webapp.RequestHandler):
                 else:
                     ## user informations has cached. Direct use memcache value.
                     tv = value
-                self.response.out.write(template.render('hh_firstpage.htm',{'tv':tv}))
+                self.response.out.write(template.render('./template/hh_firstpage.htm',{'tv':tv}))
             except:
                 ## All fault go to '/oops' page.
                 self.redirect('/oops')
@@ -116,7 +117,7 @@ class showavatar(webapp.RequestHandler):
                 self.redirect('/?u=%s' % u)
             else:
                 p['piclist'] = application.printpic(tv['avatar'])
-                self.response.out.write(template.render('hh_avatar.htm',{'tv':tv,'p':p}))
+                self.response.out.write(template.render('./template/hh_avatar.htm',{'tv':tv,'p':p}))
         except:
             self.redirect('/?u=%s' % u)
 
@@ -143,7 +144,7 @@ class seeallfriend(webapp.RequestHandler):
                     ## If login fault, go to refresh to try again.
                     url = '/friends?u=%s' % u
                     re = {'url':url}
-                    self.response.out.write(template.render('hh_refresh.htm',{'re':re}))
+                    self.response.out.write(template.render('./template/hh_refresh.htm',{'re':re}))
                 ## Friends cache
                 getcache = memcache.get("f_%s" % u.upper())
                 if getcache is None:
@@ -163,12 +164,12 @@ class seeallfriend(webapp.RequestHandler):
                     memcache.add("f_%s" % u.upper(), f, 180)
                 else:
                     f = getcache
-                self.response.out.write(template.render('hh_friend.htm',{'f':f,'tv':tv}))
+                self.response.out.write(template.render('./template/hh_friend.htm',{'f':f,'tv':tv}))
         except:
             ## If loading fault, go to refresh to try again.
             url = '/friends?u=%s' % u
             re = {'url':url}
-            self.response.out.write(template.render('hh_refresh.htm',{'re':re}))
+            self.response.out.write(template.render('./template/hh_refresh.htm',{'re':re}))
 
 class friccindex(webapp.RequestHandler):
     """ Co-friends Index page.
@@ -177,7 +178,7 @@ class friccindex(webapp.RequestHandler):
     def get(self):
         u = self.request.get('u').replace('/','')
         tv = {'nick_name': u}
-        self.response.out.write(template.render('h_friccindex.htm',{'tv':tv}))
+        self.response.out.write(template.render('./template/h_friccindex.htm',{'tv':tv}))
 
 class fricc(webapp.RequestHandler):
     """ Show co-friends page.
@@ -224,7 +225,7 @@ class fricc(webapp.RequestHandler):
                                             ubid = int(application.getnameid(ub))
                                             )
             indata.put()
-            self.response.out.write(template.render('hh_friendcc.htm',{'f':f,'p':p}))
+            self.response.out.write(template.render('./template/hh_friendcc.htm',{'f':f,'p':p}))
         except:
             self.redirect('/oops')
 
@@ -246,7 +247,7 @@ class girls(webapp.RequestHandler):
                 'title':'Girls',
                 'content':application.getwall()
                 }
-        self.response.out.write(template.render('hh_wall.htm',{'tv':tv}))
+        self.response.out.write(template.render('./template/hh_wall.htm',{'tv':tv}))
 
 class boys(webapp.RequestHandler):
     """ Boys Wall
@@ -256,7 +257,7 @@ class boys(webapp.RequestHandler):
                 'title':'Boys',
                 'content':application.getwall(1)
                 }
-        self.response.out.write(template.render('hh_wall.htm',{'tv':tv}))
+        self.response.out.write(template.render('./template/hh_wall.htm',{'tv':tv}))
 
 class karma(webapp.RequestHandler):
     """ karma Wall
@@ -266,7 +267,17 @@ class karma(webapp.RequestHandler):
                 'title':'Karma 100',
                 'content':application.karmawall()
                 }
-        self.response.out.write(template.render('hh_wall.htm',{'tv':tv}))
+        self.response.out.write(template.render('./template/hh_wall.htm',{'tv':tv}))
+
+class morepic(webapp.RequestHandler):
+    """ karma Wall
+    """
+    def get(self):
+        tv =    {
+                'title':'More Avatars',
+                'content':application.morepicwall()
+                }
+        self.response.out.write(template.render('./template/hh_wall.htm',{'tv':tv}))
 
 class vote(webapp.RequestHandler):
     """ User talk and vote page.
@@ -279,7 +290,7 @@ class vote(webapp.RequestHandler):
             if tv is None:
                 self.redirect('/?u=%s' % u)
             else:
-                self.response.out.write(template.render('hh_vote.htm',{'tv':tv}))
+                self.response.out.write(template.render('./template/hh_vote.htm',{'tv':tv}))
         except:
             self.redirect('/?u=%s' % u)
 
@@ -287,37 +298,37 @@ class push(webapp.RequestHandler):
     """ PUSH page.
     """
     def get(self):
-        self.response.out.write(template.render('hh_push.htm',{}))
+        self.response.out.write(template.render('./template/hh_push.htm',{}))
 
 class searchuser(webapp.RequestHandler):
     """ Search user info. from Google page.
     """
     def get(self):
-        self.response.out.write(template.render('hh_aboutuser.htm',{}))
+        self.response.out.write(template.render('./template/hh_aboutuser.htm',{}))
 
 class about(webapp.RequestHandler):
     """ Plurkii about page.
     """
     def get(self):
-        self.response.out.write(template.render('hh_about.htm',{}))
+        self.response.out.write(template.render('./template/hh_about.htm',{}))
 
 class contact(webapp.RequestHandler):
     """ Contact page.
     """
     def get(self):
-        self.response.out.write(template.render('hh_contact.htm',{}))
+        self.response.out.write(template.render('./template/hh_contact.htm',{}))
 
 class promote(webapp.RequestHandler):
     """ Promote Plurkii page.
     """
     def get(self):
-        self.response.out.write(template.render('hh_promote.htm',{}))
+        self.response.out.write(template.render('./template/hh_promote.htm',{}))
 
 class oops(webapp.RequestHandler):
     """ Page fault show page.
     """
     def get(self):
-        self.response.out.write(template.render('hh_oops.htm',{}))
+        self.response.out.write(template.render('./template/hh_oops.htm',{}))
 
 class oopspage(webapp.RequestHandler):
     """ All no default page will redirection to '/oops'
@@ -353,6 +364,7 @@ def main():
                                                         ('/girls',girls),
                                                         ('/boys',boys),
                                                         ('/karma',karma),
+                                                        ('/moreavatar',morepic),
                                                         ('/avatar',showavatar),
                                                         ('/talk',vote),
                                                         ('/push',push),

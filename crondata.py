@@ -82,11 +82,16 @@ def crondata(u = None,uid = None):
 try:
     ## Random to cache per 1,000,000 users id.
     ## Most of Taiwan's users are in 3,000,000 ~ 4,000,000 uid.
+    crondata(uid = str(random.randrange(5000000,6000000)))
+    crondata(uid = str(random.randrange(4000000,5000000)))
     crondata(uid = str(random.randrange(4000000,5000000)))
     crondata(uid = str(random.randrange(3000000,4000000)))
     crondata(uid = str(random.randrange(3000000,4000000)))
     crondata(uid = str(random.randrange(2000000,3000000)))
+    crondata(uid = str(random.randrange(2000000,3000000)))
     crondata(uid = str(random.randrange(1000000,2000000)))
+    crondata(uid = str(random.randrange(1000000,2000000)))
+    crondata(uid = str(random.randrange(1,1000000)))
     crondata(uid = str(random.randrange(1,1000000)))
 except:
     pass

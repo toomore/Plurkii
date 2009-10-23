@@ -28,6 +28,10 @@ plurkapi.py
 application.py
 
 ===== Change Logs =====
+2.6.0
+ - Add More Avatars Wall.
+ - Change template path.
+
 2.5.0
  - Write description and application.
  - Change promote icon place.

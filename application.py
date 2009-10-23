@@ -81,6 +81,24 @@ def karmawall(karma = 99):
         a = kw
     return a
 
+def morepicwall(limit = 50):
+    """ Show karma Wall
+    """
+    kw = memcache.get('morepicwall')
+    if kw is None:
+        kw = datamodel.userplurkdata.gql("order by avatar desc limit :1" ,limit)
+        a = ''
+        for i in kw:
+            if i.avatar:
+                avatar = 'http://avatars.plurk.com/%s-big%s.jpg' % (i.key().id_or_name(),i.avatar)
+            else:
+                avatar = '/images/face-angel.png'
+            a = a + "<a href='/?u=%s'><img alt='%s' src='%s'></a>" % (i.uname,i.uname,avatar)
+        memcache.add('morepicwall',a,60*60*4)
+    else:
+        a = kw
+    return a
+
 def getnameid(name):
     """ Get Plurk user id by nickname. """
     q = name.replace('/','')

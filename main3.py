@@ -269,6 +269,16 @@ class karma(webapp.RequestHandler):
                 }
         self.response.out.write(template.render('hh_wall.htm',{'tv':tv}))
 
+class morepic(webapp.RequestHandler):
+    """ karma Wall
+    """
+    def get(self):
+        tv =    {
+                'title':'More Avatars',
+                'content':application.morepicwall()
+                }
+        self.response.out.write(template.render('hh_wall.htm',{'tv':tv}))
+
 class vote(webapp.RequestHandler):
     """ User talk and vote page.
     """
@@ -354,6 +364,7 @@ def main():
                                                         ('/girls',girls),
                                                         ('/boys',boys),
                                                         ('/karma',karma),
+                                                        ('/moreavatar',morepic),
                                                         ('/avatar',showavatar),
                                                         ('/talk',vote),
                                                         ('/push',push),

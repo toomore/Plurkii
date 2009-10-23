@@ -81,12 +81,14 @@ def karmawall(karma = 99):
         a = kw
     return a
 
-def morepicwall(limit = 50):
+def morepicwall(limit = 126):
     """ Show karma Wall
     """
-    kw = memcache.get('morepicwall')
+    kw = memcache.get('morepicwall1')
     if kw is None:
-        kw = datamodel.userplurkdata.gql("order by avatar desc limit :1" ,limit)
+	## Make a random offset
+	offset = random.randrange(0,5) * limit
+        kw = datamodel.userplurkdata.gql("order by avatar desc limit %s,%s" % (offset,limit))
         a = ''
         for i in kw:
             if i.avatar:
@@ -94,7 +96,7 @@ def morepicwall(limit = 50):
             else:
                 avatar = '/images/face-angel.png'
             a = a + "<a href='/?u=%s'><img alt='%s' src='%s'></a>" % (i.uname,i.uname,avatar)
-        memcache.add('morepicwall',a,60*60*4)
+        memcache.add('morepicwall1',a,60*30)
     else:
         a = kw
     return a

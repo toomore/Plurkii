@@ -28,6 +28,9 @@ plurkapi.py
 application.py
 
 ===== Change Logs =====
+2.6.1
+ - Change sitemap.
+
 2.6.0
  - Add More Avatars Wall.
  - Change template path.

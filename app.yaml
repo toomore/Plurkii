@@ -52,8 +52,17 @@ handlers:
   script: application.py
   login: admin
 
+## Google wave robot
+- url: /_wave/.*
+  script: wavebot.py
+- url: /assets
+  static_dir: assets
+
 ## Main WSGI
 - url: .*
   script: main3.py
   #secure: always
   #login: admin
+
+inbound_services:
+- xmpp_message

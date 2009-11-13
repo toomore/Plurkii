@@ -43,8 +43,15 @@ def OnSubmit(properties, context):
       subquery = query.group(1).split(' ')
       if subquery[0] == 'boy':
         blip.AppendText('%s' % subquery[0])
+        #blip.SetAnnotation(document.Range(),"link/manual", 'http://google.com')
+        #Notify(context)
       elif subquery[0] == 'girl':
         blip.AppendText('%s' % subquery[0])
+      elif subquery[0] == 'show':
+        try:
+          blip.AppendText(u"u want to show %s" % subquery[1])
+        except:
+          blip.AppendText(u"No people!!")
       else:
         # No match keywords
         blip.AppendText(u"I don't know what do you mean. → %s." % subquery[0])
@@ -61,7 +68,7 @@ def OnSubmit(properties, context):
 
 
 def Notify(context):
-  root_wavelet = context.GetRootWavelet()
+  root_wavelet = context.GetWaveletById(properties['waveletId'])
   root_wavelet.CreateBlip().GetDocument().SetText("Hi everybody!")
 
 if __name__ == '__main__':

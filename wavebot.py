@@ -36,21 +36,29 @@ You can type below keywords in reply to get more information.
 def OnSubmit(properties, context):
   blip = context.GetBlipById(properties['blipId']).GetDocument()
   contents = blip.GetText()
-  query = re.match('.*\[(.+) (.+)\].*', contents)
+  query = re.match('.*\[(.+)\].*', contents)
   blip.AppendText('\n')
   try:
     if query.group(0):
-      if query.group(1)  == 'boy':
-        blip.AppendText("%s - %s" % (query.group(1),query.group(2)))
+      subquery = query.group(1).split(' ')
+      if subquery[0] == 'boy':
+        blip.AppendText('%s' % subquery[0])
+      elif subquery[0] == 'girl':
+        blip.AppendText('%s' % subquery[0])
       else:
-        #blip.AppendText("ELSE = %s,%s" % (query.group(1),query.group(2)))
-        blip.AppendText(u"I don't know what do you mean. → %s" % contents)
+        # No match keywords
+        blip.AppendText(u"I don't know what do you mean. → %s." % subquery[0])
     else:
+      # No match keywords
       pass
+    image = document.Image('http://plurkii.appspot.com/favicon.ico')
+    blip.AppendElement(image)
   except:
+    # No keywords
+    ## Out off here whithin statable.
     blip.AppendText(u"I don't know what do you mean. → %s \n view howto." % contents)
-  image = document.Image('http://plurkii.appspot.com/favicon.ico')
-  blip.AppendElement(image)
+
+
 
 def Notify(context):
   root_wavelet = context.GetRootWavelet()

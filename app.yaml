@@ -63,6 +63,3 @@ handlers:
   script: main3.py
   #secure: always
   #login: admin
-
-inbound_services:
-- xmpp_message

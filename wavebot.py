@@ -33,13 +33,12 @@ def OnSubmit(properties, context):
   blip = context.GetBlipById(properties['blipId']).GetDocument()
   contents = blip.GetText()
   query = re.match('.*\[(.+)\].*', contents)
-  blip.AppendText('\n')
   try:
     if query.group(0):
       subquery = query.group(1).split(' ')
       if subquery[0] == 'boy':
         showuser = userplurkdata.gql('where gender = 1 and avatar > 0').fetch(1,randrange(1,1000))
-        blip.AppendText('Here U are! *_* ')
+        blip.AppendText('\n Here U are! *_* ')
         try:
           showplurkinfo(showuser, blip)
         except:
@@ -52,7 +51,7 @@ def OnSubmit(properties, context):
         #newblip.GetDocument().SetText('New blip!! Ya!')
       elif subquery[0] == 'girl':
         showuser = userplurkdata.gql('where gender = 0 and avatar > 0').fetch(1,randrange(1,1000))
-        blip.AppendText('Here U are! >///< - ')
+        blip.AppendText('\n Here U are! >///< - ')
         try:
           showplurkinfo(showuser, blip)
         except:
@@ -76,7 +75,8 @@ def OnSubmit(properties, context):
   except:
     # No keywords
     ## Out off here whithin statable.
-    blip.AppendText(u"I don't know what do you mean. → %s \n view howto." % contents)
+    #blip.AppendText(u"I don't know what do you mean. → %s \n view howto." % contents)
+    pass
 
 def showplurkinfo(showuser,blip):
   ''' Output plurk infor. to wave 

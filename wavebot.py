@@ -7,12 +7,7 @@ from waveapi import robot
 from waveapi import document
 
 import re
-
-def OnParticipantsChanged(properties, context):
-  """Invoked when any participants have been added/removed."""
-  added = properties['participantsAdded']
-  for p in added:
-    Notify(context)
+from datamodel import userplurkdata
 
 def OnRobotAdded(properties, context):
   """Invoked when the robot has been added."""
@@ -44,7 +39,7 @@ def OnSubmit(properties, context):
       if subquery[0] == 'boy':
         blip.AppendText('%s' % subquery[0])
         blip.AppendText('%s' % properties)
-        
+        #blip.AppendText('%s' % context.GetBlipById(properties['blipId']))
         #blip.AppendInlineBlip().GetDocument().AppendText('\nPlease type a value for all form elements.')
         #blip.SetAnnotation(document.Range(),"link/manual", 'http://google.com')
         #Notify(context)
@@ -54,7 +49,16 @@ def OnSubmit(properties, context):
         blip.AppendText('%s' % subquery[0])
       elif subquery[0] == 'show':
         try:
-          blip.AppendText(u"u want to show %s" % subquery[1])
+          showuser = userplurkdata.gql('where uname = :1' , subquery[1])
+          blip.AppendText(u"u want to show %s \n" % subquery[1])
+          for i in showuser:
+            blip.AppendText(u"%s \n" % (i.uname))
+            m = re.search(i.uname, contents)
+            blip.SetAnnotation(document.Range(m.start(),m.end()),"link/manual",'http://www.plurk.com/%s' % i.uname)
+            if i.avatar:
+              blip.AppendElement(document.Image('http://avatars.plurk.com/%s-big%s.jpg' % (i.key().id_or_name(),i.avatar)))
+            else:
+              blip.AppendText('(No avatar.)')
         except:
           blip.AppendText(u"No people!!")
       else:
@@ -69,12 +73,6 @@ def OnSubmit(properties, context):
     # No keywords
     ## Out off here whithin statable.
     blip.AppendText(u"I don't know what do you mean. → %s \n view howto." % contents)
-
-
-
-def Notify(context):
-  root_wavelet = context.GetWaveletById(properties['waveletId'])
-  root_wavelet.CreateBlip().GetDocument().SetText("Hi everybody!")
 
 if __name__ == '__main__':
   myRobot = robot.Robot('Plurkii!', 

@@ -25,7 +25,11 @@ Welcome to use Plurkii-wave-bot
 You can type below keywords in reply to get more information.
   [boy] => Random to show a boy.
   [girl] => Random to show a girl.
-  [show PLURK_ID] => To show a user plurk information."""
+  [show PLURK_ID] => To show a user plurk information.
+
+  Note: This robot is still in development, need your feedback. Thanks!
+        plurkii.app@gmail.com
+"""
   blip.AppendText(howto)
   blip.AppendElement(document.Image('http://plurkii.appspot.com/favicon.ico'))
 

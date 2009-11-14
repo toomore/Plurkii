@@ -43,8 +43,13 @@ def OnSubmit(properties, context):
       subquery = query.group(1).split(' ')
       if subquery[0] == 'boy':
         blip.AppendText('%s' % subquery[0])
+        blip.AppendText('%s' % properties)
+        
+        #blip.AppendInlineBlip().GetDocument().AppendText('\nPlease type a value for all form elements.')
         #blip.SetAnnotation(document.Range(),"link/manual", 'http://google.com')
         #Notify(context)
+        #newblip = context.GetBlipById(properties['blipId']).CreateChild()
+        #newblip.GetDocument().SetText('New blip!! Ya!')
       elif subquery[0] == 'girl':
         blip.AppendText('%s' % subquery[0])
       elif subquery[0] == 'show':

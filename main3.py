@@ -312,6 +312,12 @@ class about(webapp.RequestHandler):
     def get(self):
         self.response.out.write(template.render('./template/hh_about.htm',{}))
 
+class wavebot(webapp.RequestHandler):
+    """ Wavebot page.
+    """
+    def get(self):
+        self.response.out.write(template.render('./template/hh_wavebot.htm',{}))
+
 class contact(webapp.RequestHandler):
     """ Contact page.
     """
@@ -370,6 +376,7 @@ def main():
                                                         ('/push',push),
                                                         ('/searchuser',searchuser),
                                                         ('/about',about),
+                                                        ('/wavebot',wavebot),
                                                         ('/promote',promote),
                                                         ('/contact',contact),
                                                         ('/getmemstats',getmemstats),

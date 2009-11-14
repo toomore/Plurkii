@@ -63,14 +63,14 @@ def OnSubmit(properties, context):
       elif subquery[0] == 'show':
         try:
           showuser = userplurkdata.gql('where uname = :1' , subquery[1])
-          blip.AppendText(u"u want to show %s \n" % subquery[1])
+          blip.AppendText(u"\n u want to show %s \n" % subquery[1])
           # Output Plurk infor.
           showplurkinfo(showuser, blip)
         except:
-          blip.AppendText(u"No people!!")
+          blip.AppendText(u"\n No people!!")
       else:
         # No match keywords
-        blip.AppendText(u"I don't know what do you mean. → %s." % subquery[0])
+        blip.AppendText(u"\n I don't know what do you mean. → %s." % subquery[0])
     else:
       # No match keywords
       pass

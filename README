@@ -28,6 +28,10 @@ plurkapi.py
 application.py
 
 ===== Change Logs =====
+2.7.0
+ - Add Google Wave Robot(dev)
+ - Add Google Wave Robot information page.
+
 2.6.1
  - Change sitemap.
 

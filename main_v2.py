@@ -12,7 +12,7 @@ from google.appengine.api import memcache
 from google.appengine.ext.db import GqlQuery
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import template
-from datamodel import userplurkdata
+from datamodel import userplurkdata,datacofriend
 
 def ckini(s):
   try:
@@ -65,10 +65,34 @@ class Tolist(webapp.RequestHandler):
       print '123'
       print i.key().id_or_name(),i.uname
 
+class chlow(webapp.RequestHandler):
+  def get(self):
+    addcklow = memcache.get('addcklow')
+    print '123'
+    print addcklow
+    if addcklow:
+      data = userplurkdata.gql("limit %s,5" % str(5 * addcklow))
+      for i in data:
+        i.uname = i.uname.lower()
+        #i.cklowstr = True
+        i.put()
+        print i.uname
+      memcache.incr('addcklow')
+    else:
+      memcache.incr('addcklow',initial_value=0)
+
+class delooo(webapp.RequestHandler):
+  def get(self):
+    deldata = datacofriend.all().fetch(100)
+    for i in deldata:
+      i.delete()
+
 def main():
   """ Start up. """
   application = webapp.WSGIApplication([('/', MainHandler),
                                         ('/list', Tolist),
+                                        ('/chlow', chlow),
+                                        ('/delooo', delooo),
                                         ('/.*',MainHandler)],debug=True)
   run_wsgi_app(application)
 

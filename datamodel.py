@@ -19,4 +19,5 @@ class userplurkdata(db.Model):
     gender  = db.IntegerProperty()
     birthday = db.DateProperty()
     location = db.StringProperty()
+    cklowstr = db.BooleanProperty()
     uindate = db.DateTimeProperty(auto_now_add = True)

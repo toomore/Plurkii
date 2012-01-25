@@ -1,0 +1,42 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+    <title>Plurkii!</title>
+    <meta name="description" content="Search your Plurk friends and fans avatar.">
+    <link rel="stylesheet" type="text/css" href="/css/css.css">
+    <script type="text/javascript">
+    function addpics(){
+      var i=Number(document.getElementById("no").innerHTML)+2;
+      var eni = i+20;
+      for (i;i<=eni;i=i+2){
+        document.getElementById("demo").innerHTML= i+'.<img alt="" src="http://avatars.plurk.com/{{ uid }}-big'+i+'.jpg">'+document.getElementById("demo").innerHTML;
+        document.getElementById("no").innerHTML = i;
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <table width="100%" height="80%">
+      <tr>
+        <td align="center" valign="middle">
+          <div>
+            <form action="/byid" method="get">
+              序號
+              <input maxlength="40" size="15" name="u" value="{{ uid }}" placeholder="請輸入序號">
+              <input type="submit" value="Plurkii!">
+            </form>
+            {% if uid %}
+            <span id="no">0</span>
+            <button type="button" onclick="addpics()">增加照片</button><br>
+            <span id="demo"></span><br>
+            <img alt="" src="http://avatars.plurk.com/{{ uid }}-big.jpg">
+            {%else%}
+
+            {%endif%}
+          </div>
+        </td>
+      </tr>
+    </table>
+  </body>
+{% include "h_analytics.htm" %}
+</html>

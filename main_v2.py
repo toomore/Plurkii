@@ -36,14 +36,17 @@ class MainHandler(webapp.RequestHandler):
         p2u['avatar'] = i.avatar
         p2uinmem.append(p2u.copy())
     else:
-      q = userplurkdata.get_by_key_name(str(int(self.request.get('u').replace(' ',''))))
-      p2u['key'] = q.key().id_or_name()
-      p2u['uname'] = q.uname
-      p2u['fullname'] = q.fullname
-      p2u['birthday'] = q.birthday
-      p2u['location'] = q.location
-      p2u['avatar'] = q.avatar
-      p2uinmem.append(p2u.copy())
+      try:
+        q = userplurkdata.get_by_key_name(str(int(self.request.get('u').replace(' ',''))))
+        p2u['key'] = q.key().id_or_name()
+        p2u['uname'] = q.uname
+        p2u['fullname'] = q.fullname
+        p2u['birthday'] = q.birthday
+        p2u['location'] = q.location
+        p2u['avatar'] = q.avatar
+        p2uinmem.append(p2u.copy())
+      except:
+        self.redirect('/')
 
     op = u'序號 ID 暱稱 生日 地區 頭像數<br>'
     for i in p2uinmem:
@@ -58,9 +61,9 @@ class MainHandler(webapp.RequestHandler):
         i['avatar'] = None
         tv['avatar'] = 0
       op += u'''
-        <span id="uid">%(key)s</span> %(uname)s %(fullname)s %(birthday)s %(location)s <span id="no">%(avatar)s</span><br>
+        <a href="/byid?u=%(key)s"><span id="uid">%(key)s</span></a> %(uname)s %(fullname)s %(birthday)s %(location)s <span id="no">%(avatar)s</span><br>
         <button type="button" onclick="addpics()">增加照片</button><br>
-        <span id="demo"></span><hr>
+        <span id="demo"></span><br>
         <span id="loadpics"></span><br>
         ''' % i
       tv['onload'] = " onLoad='loadpics()'"
@@ -69,6 +72,14 @@ class MainHandler(webapp.RequestHandler):
     tv['op'] = op
     tv['nick_name'] = self.request.get('u')
     self.response.out.write(template.render('./template/h_index.htm',{'tv':tv}))
+
+class byid(webapp.RequestHandler):
+  def get(self):
+    try:
+      uid = str(self.request.get('u'))
+      self.response.out.write(template.render('./template/h_byid.htm',{'uid':uid}))
+    except:
+      self.redirect('/byid')
 
 class Tolist(webapp.RequestHandler):
   def get(self):
@@ -102,6 +113,7 @@ class delooo(webapp.RequestHandler):
 def main():
   """ Start up. """
   application = webapp.WSGIApplication([('/', MainHandler),
+                                        ('/byid', byid),
                                         ('/.*',MainHandler)],debug=True)
   run_wsgi_app(application)
 

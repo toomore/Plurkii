@@ -26,7 +26,7 @@ class MainHandler(webapp.RequestHandler):
     p2u = {}
     tv = {}
     if ckini(self.request.get('u')) == False:
-      q = userplurkdata.gql("WHERE uname = '%s'" % self.request.get('u'))
+      q = userplurkdata.gql("WHERE uname = '%s'" % self.request.get('u').replace(' ',''))
       for i in q:
         p2u['key'] = i.key().id_or_name()
         p2u['uname'] = i.uname
@@ -36,7 +36,7 @@ class MainHandler(webapp.RequestHandler):
         p2u['avatar'] = i.avatar
         p2uinmem.append(p2u.copy())
     else:
-      q = userplurkdata.get_by_key_name(str(int(self.request.get('u'))))
+      q = userplurkdata.get_by_key_name(str(int(self.request.get('u').replace(' ',''))))
       p2u['key'] = q.key().id_or_name()
       p2u['uname'] = q.uname
       p2u['fullname'] = q.fullname
@@ -48,12 +48,24 @@ class MainHandler(webapp.RequestHandler):
     op = u'序號 ID 暱稱 生日 地區 頭像數<br>'
     for i in p2uinmem:
       if i['avatar'] > 0:
+        '''
         i['pics'] = ''
         for no in range(2,i['avatar']+2,2):
           i['pics'] += "<img alt='' src='http://avatars.plurk.com/%s-big%s.jpg'>" % (i['key'],no)
+        '''
+        tv['avatar'] = i['avatar']
       else:
-        i['pics'] = None
-      op += '%(key)s %(uname)s %(fullname)s %(birthday)s %(location)s %(avatar)s<br>%(pics)s<br>' % i
+        i['avatar'] = None
+        tv['avatar'] = 0
+      op += u'''
+        <span id="uid">%(key)s</span> %(uname)s %(fullname)s %(birthday)s %(location)s <span id="no">%(avatar)s</span><br>
+        <button type="button" onclick="addpics()">增加照片</button><br>
+        <span id="demo"></span><hr>
+        <span id="loadpics"></span><br>
+        ''' % i
+      tv['onload'] = " onLoad='loadpics()'"
+      tv['key'] = i['key']
+
     tv['op'] = op
     tv['nick_name'] = self.request.get('u')
     self.response.out.write(template.render('./template/h_index.htm',{'tv':tv}))
@@ -90,9 +102,6 @@ class delooo(webapp.RequestHandler):
 def main():
   """ Start up. """
   application = webapp.WSGIApplication([('/', MainHandler),
-                                        ('/list', Tolist),
-                                        ('/chlow', chlow),
-                                        ('/delooo', delooo),
                                         ('/.*',MainHandler)],debug=True)
   run_wsgi_app(application)
 

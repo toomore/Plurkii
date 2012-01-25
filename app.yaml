@@ -28,4 +28,4 @@ handlers:
 - url: .*
   script: main_v2.py
   #secure: always
-  login: admin
+  #login: admin

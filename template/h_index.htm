@@ -2,7 +2,7 @@
   <head>
     <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
     <title>Plurkii!</title>
-    <meta name="description" content="Search your Plurk friends and fans avatar.">
+    <meta name="description" content="View Plurk avatar.">
     <link rel="stylesheet" type="text/css" href="/css/css.css">
     <script type="text/javascript">
     function loadpics(){
@@ -26,13 +26,16 @@
       <tr>
         <td align="center" valign="middle">
           <div>
-            <div class="rdu">{{ tv.tip }}</div>
             <form action="/" method="get">
-              帳號或序號
-              <input maxlength="40" size="15" name="u" value="{{ tv.nick_name }}" placeholder="大小寫有差！">
-              <input type="submit" value="Plurkii!">
+              <div class="con">Plurk 帳號或序號 <sup><a href="/howtofindid">How to!</a></sup></div>
+              <input maxlength="40" size="15" name="u" value="{{ tv.nick_name }}" placeholder="帳號大小寫有差！">
+              <input type="submit" value="Plurkii!"><br>
+              <div class="con">資料庫找不到可以試試<a href="/byid">這個</a>。</div>
             </form>
+            {% if tv.key %}
             {{ tv.op }}<img alt="" src="http://avatars.plurk.com/{{ tv.key }}-big.jpg">
+            {% else %}
+            {%endif%}
           </div>
         </td>
       </tr>

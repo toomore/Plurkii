@@ -81,6 +81,10 @@ class byid(webapp.RequestHandler):
     except:
       self.redirect('/byid')
 
+class howtofindid(webapp.RequestHandler):
+  def get(self):
+    self.response.out.write(template.render('./template/h_howtofindid.htm',{}))
+
 class Tolist(webapp.RequestHandler):
   def get(self):
     a = userplurkdata.all()
@@ -114,6 +118,7 @@ def main():
   """ Start up. """
   application = webapp.WSGIApplication([('/', MainHandler),
                                         ('/byid', byid),
+                                        ('/howtofindid', howtofindid),
                                         ('/.*',MainHandler)],debug=True)
   run_wsgi_app(application)
 

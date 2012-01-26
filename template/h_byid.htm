@@ -1,8 +1,8 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
-    <title>Plurkii!</title>
-    <meta name="description" content="Search your Plurk friends and fans avatar.">
+    <title>Plurkii! search by id.</title>
+    <meta name="description" content="View Plurk avatar.">
     <link rel="stylesheet" type="text/css" href="/css/css.css">
     <script type="text/javascript">
     function addpics(){
@@ -21,9 +21,10 @@
         <td align="center" valign="middle">
           <div>
             <form action="/byid" method="get">
-              序號
-              <input maxlength="40" size="15" name="u" value="{{ uid }}" placeholder="請輸入序號">
+              <div class="con">Plurk 使用者序號 <sup><a href="/howtofindid">How to!</a></sup></div>
+              <input maxlength="40" size="15" name="u" value="{{ uid }}" placeholder="請輸入使用者序號">
               <input type="submit" value="Plurkii!">
+              <div class="con">使用帳號<a href="/">找找</a>。</div>
             </form>
             {% if uid %}
             <span id="no">0</span>

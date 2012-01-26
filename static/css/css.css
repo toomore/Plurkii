@@ -5,7 +5,7 @@ a:hover{
         color:#6666dd}
 body{
         font-family: arial;}
-input{
+input, button{
         font-size:14pt;
         font-family: arial;
         font-weight: bold;
@@ -35,7 +35,8 @@ input{
         border:0px;
         width:86px;}
 .con {
-        font-size:10pt;}
+        font-size:10pt;
+        text-shadow:1px 1px 1px #aaa;}
 .mimg{
         vertical-align:middle;
         border:0px;}
@@ -77,3 +78,5 @@ input{
         border-bottom:1px #aabbaa solid;}
 .foot {clear:both;}
 .cc {clear:both;}
+#demo {
+        font-size:10pt;}

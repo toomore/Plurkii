@@ -9,10 +9,10 @@ use_library('django', '1.2')
 '''
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
-from google.appengine.ext.db import GqlQuery
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import template
 from datamodel import userplurkdata,datacofriend
+import plurklib
 
 def ckini(s):
   try:
@@ -25,52 +25,63 @@ class MainHandler(webapp.RequestHandler):
     p2uinmem = []
     p2u = {}
     tv = {}
-    if ckini(self.request.get('u')) == False:
-      q = userplurkdata.gql("WHERE uname = '%s'" % self.request.get('u').replace(' ',''))
-      for i in q:
-        p2u['key'] = i.key().id_or_name()
-        p2u['uname'] = i.uname
-        p2u['fullname'] = i.fullname
-        p2u['birthday'] = i.birthday
-        p2u['location'] = i.location
-        p2u['avatar'] = i.avatar
-        p2uinmem.append(p2u.copy())
+    if len(self.request.get('u')) == 0:
+      pass
     else:
-      try:
-        q = userplurkdata.get_by_key_name(str(int(self.request.get('u').replace(' ',''))))
-        p2u['key'] = q.key().id_or_name()
-        p2u['uname'] = q.uname
-        p2u['fullname'] = q.fullname
-        p2u['birthday'] = q.birthday
-        p2u['location'] = q.location
-        p2u['avatar'] = q.avatar
-        p2uinmem.append(p2u.copy())
-      except:
-        self.redirect('/')
+      if ckini(self.request.get('u')) == False:
+        q = userplurkdata.gql("WHERE uname = '%s'" % self.request.get('u').replace(' ',''))
+        if q.count() == 0:
+          p = plurklib.PlurkAPI('mCDwgcld4WKj1GFzZPB7mJlgm9lSHwks')
+          uno = p.usernameToUid(self.request.get('u').replace(' ',''))
+          self.redirect('/byid?u=%s' % uno)
+        else:
+          for i in q:
+            p2u['key'] = i.key().id_or_name()
+            p2u['uname'] = i.uname
+            p2u['fullname'] = i.fullname
+            p2u['birthday'] = i.birthday
+            p2u['location'] = i.location
+            p2u['avatar'] = i.avatar
+            p2uinmem.append(p2u.copy())
+      else:
+        try:
+          q = userplurkdata.get_by_key_name(str(int(self.request.get('u').replace(' ',''))))
+          p2u['key'] = q.key().id_or_name()
+          p2u['uname'] = q.uname
+          p2u['fullname'] = q.fullname
+          p2u['birthday'] = q.birthday
+          p2u['location'] = q.location
+          p2u['avatar'] = q.avatar
+          p2uinmem.append(p2u.copy())
+        except:
+          p = plurklib.PlurkAPI('mCDwgcld4WKj1GFzZPB7mJlgm9lSHwks')
+          uno = p.usernameToUid(self.request.get('u').replace(' ',''))
+          self.redirect('/byid?u=%s' % uno)
 
     op = u'序號 ID 暱稱 生日 地區 頭像數<br>'
     for i in p2uinmem:
       if i['avatar'] > 0:
-        '''
-        i['pics'] = ''
-        for no in range(2,i['avatar']+2,2):
-          i['pics'] += "<img alt='' src='http://avatars.plurk.com/%s-big%s.jpg'>" % (i['key'],no)
-        '''
         tv['avatar'] = i['avatar']
       else:
         i['avatar'] = None
         tv['avatar'] = 0
-      op += u'''
-        <a href="/byid?u=%(key)s"><span id="uid">%(key)s</span></a> %(uname)s %(fullname)s %(birthday)s %(location)s <span id="no">%(avatar)s</span><br>
-        <button type="button" onclick="addpics()">增加照片</button><br>
-        <span id="demo"></span><br>
-        <span id="loadpics"></span><br>
-        ''' % i
-      tv['onload'] = " onLoad='loadpics()'"
-      tv['key'] = i['key']
+      if len(p2uinmem) > 1:
+        op += u'''
+          <a href="/byid?u=%(key)s"><div class="listq"><span id="uid">%(key)s</span> %(uname)s %(fullname)s %(birthday)s %(location)s <span id="no">%(avatar)s</span></div></a><br>
+          ''' % i
+        tv['key'] = i['key']
+      else:
+        op += u'''
+          <a href="/byid?u=%(key)s"><span id="uid">%(key)s</span></a> %(uname)s %(fullname)s %(birthday)s %(location)s <span id="no">%(avatar)s</span><br>
+          <button type="button" onclick="addpics()">增加照片</button><br>
+          <span id="demo"></span><br>
+          <span id="loadpics"></span><br>
+          ''' % i
+        tv['onload'] = " onLoad='loadpics()'"
+        tv['key'] = i['key']
 
     tv['op'] = op
-    tv['nick_name'] = self.request.get('u')
+    tv['nick_name'] = self.request.get('u').replace(' ','')
     self.response.out.write(template.render('./template/h_index.htm',{'tv':tv}))
 
 class byid(webapp.RequestHandler):

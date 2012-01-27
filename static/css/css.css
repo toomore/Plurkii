@@ -80,3 +80,8 @@ input, button{
 .cc {clear:both;}
 #demo {
         font-size:10pt;}
+.listq {
+        background:#eeeeff;
+        border:1px #aaaabb solid;
+        padding:6px;
+        margin:6px;}

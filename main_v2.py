@@ -76,6 +76,7 @@ class MainHandler(webapp.RequestHandler):
           <button type="button" onclick="addpics()">增加照片</button><br>
           <span id="demo"></span><br>
           <span id="loadpics"></span><br>
+          <img alt="" src="http://avatars.plurk.com/%(key)s-big.jpg">
           ''' % i
         tv['onload'] = " onLoad='loadpics()'"
         tv['key'] = i['key']

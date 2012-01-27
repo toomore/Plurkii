@@ -13,6 +13,7 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import template
 from datamodel import userplurkdata,datacofriend
 import plurklib
+import logging
 
 def ckini(s):
   try:
@@ -32,9 +33,17 @@ class MainHandler(webapp.RequestHandler):
         q = userplurkdata.gql("WHERE uname = '%s'" % self.request.get('u').replace(' ',''))
         if q.count() == 0:
           try:
-            p = plurklib.PlurkAPI('mCDwgcld4WKj1GFzZPB7mJlgm9lSHwks')
-            uno = p.usernameToUid(self.request.get('u').replace(' ',''))
-            self.redirect('/byid?u=%s' % uno)
+            uname = str(self.request.get('u')).replace(' ','').lower()
+            uno = memcache.get(uname)
+            if uno:
+              logging.info('Useing memcache: %s %s' % (uname,uno))
+              self.redirect('/byid?u=%s' % uno)
+            else:
+              p = plurklib.PlurkAPI('mCDwgcld4WKj1GFzZPB7mJlgm9lSHwks')
+              uno = p.usernameToUid(uname)
+              memcache.set(uname,uno)
+              logging.info('Add memcache: %s %s' % (uname,uno))
+              self.redirect('/byid?u=%s' % uno)
           except:
             self.redirect('/')
         else:
@@ -57,12 +66,7 @@ class MainHandler(webapp.RequestHandler):
           p2u['avatar'] = q.avatar
           p2uinmem.append(p2u.copy())
         except:
-          try:
-            p = plurklib.PlurkAPI('mCDwgcld4WKj1GFzZPB7mJlgm9lSHwks')
-            uno = p.usernameToUid(self.request.get('u').replace(' ',''))
-            self.redirect('/byid?u=%s' % uno)
-          except:
-            self.redirect('/')
+          self.redirect('/byid?u=%s' % uno)
 
     op = u'序號 ID 暱稱 生日 地區 頭像數<br>'
     for i in p2uinmem:

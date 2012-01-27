@@ -29,3 +29,6 @@ handlers:
   script: main_v2.py
   #secure: always
   #login: admin
+
+inbound_services:
+- warmup

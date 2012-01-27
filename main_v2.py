@@ -66,6 +66,8 @@ class MainHandler(webapp.RequestHandler):
           p2u['avatar'] = q.avatar
           p2uinmem.append(p2u.copy())
         except:
+          p = plurklib.PlurkAPI('mCDwgcld4WKj1GFzZPB7mJlgm9lSHwks')
+          uno = p.usernameToUid(self.request.get('u').replace(' ',''))
           self.redirect('/byid?u=%s' % uno)
 
     op = u'序號 ID 暱稱 生日 地區 頭像數<br>'

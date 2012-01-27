@@ -31,9 +31,12 @@ class MainHandler(webapp.RequestHandler):
       if ckini(self.request.get('u')) == False:
         q = userplurkdata.gql("WHERE uname = '%s'" % self.request.get('u').replace(' ',''))
         if q.count() == 0:
-          p = plurklib.PlurkAPI('mCDwgcld4WKj1GFzZPB7mJlgm9lSHwks')
-          uno = p.usernameToUid(self.request.get('u').replace(' ',''))
-          self.redirect('/byid?u=%s' % uno)
+          try:
+            p = plurklib.PlurkAPI('mCDwgcld4WKj1GFzZPB7mJlgm9lSHwks')
+            uno = p.usernameToUid(self.request.get('u').replace(' ',''))
+            self.redirect('/byid?u=%s' % uno)
+          except:
+            self.redirect('/')
         else:
           for i in q:
             p2u['key'] = i.key().id_or_name()
@@ -54,9 +57,12 @@ class MainHandler(webapp.RequestHandler):
           p2u['avatar'] = q.avatar
           p2uinmem.append(p2u.copy())
         except:
-          p = plurklib.PlurkAPI('mCDwgcld4WKj1GFzZPB7mJlgm9lSHwks')
-          uno = p.usernameToUid(self.request.get('u').replace(' ',''))
-          self.redirect('/byid?u=%s' % uno)
+          try:
+            p = plurklib.PlurkAPI('mCDwgcld4WKj1GFzZPB7mJlgm9lSHwks')
+            uno = p.usernameToUid(self.request.get('u').replace(' ',''))
+            self.redirect('/byid?u=%s' % uno)
+          except:
+            self.redirect('/')
 
     op = u'序號 ID 暱稱 生日 地區 頭像數<br>'
     for i in p2uinmem:
@@ -87,15 +93,22 @@ class MainHandler(webapp.RequestHandler):
 
 class byid(webapp.RequestHandler):
   def get(self):
-    try:
-      uid = str(self.request.get('u'))
-      self.response.out.write(template.render('./template/h_byid.htm',{'uid':uid}))
-    except:
-      self.redirect('/byid')
+    if len(self.request.get('u').replace(' ','')) == 0:
+      self.response.out.write(template.render('./template/h_byid.htm',{}))
+    else:
+      try:
+        uid = int(self.request.get('u').replace(' ',''))
+        self.response.out.write(template.render('./template/h_byid.htm',{'uid':uid}))
+      except:
+        self.redirect('/?u=%s' % self.request.get('u').replace(' ',''))
 
 class howtofindid(webapp.RequestHandler):
   def get(self):
     self.response.out.write(template.render('./template/h_howtofindid.htm',{}))
+
+class otherpage(webapp.RequestHandler):
+  def get(self):
+    self.response.out.write('<a href="http://plurkii.appspot.com/">Plurkii!</a>')
 
 class Tolist(webapp.RequestHandler):
   def get(self):
@@ -131,7 +144,8 @@ def main():
   application = webapp.WSGIApplication([('/', MainHandler),
                                         ('/byid', byid),
                                         ('/howtofindid', howtofindid),
-                                        ('/.*',MainHandler)],debug=True)
+                                        ('/.*', otherpage)
+                                       ],debug=True)
   run_wsgi_app(application)
 
 if __name__ == '__main__':

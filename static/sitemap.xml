@@ -12,48 +12,8 @@
   <priority>1.00</priority>
 </url>
 <url>
-  <loc>http://plurkii.appspot.com/push</loc>
+  <loc>http://plurkii.appspot.com/byid</loc>
   <changefreq>always</changefreq>
   <priority>0.80</priority>
-</url>
-<url>
-  <loc>http://plurkii.appspot.com/promote</loc>
-  <changefreq>always</changefreq>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>http://plurkii.appspot.com/about</loc>
-  <changefreq>always</changefreq>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>http://plurkii.appspot.com/co-friends</loc>
-  <changefreq>always</changefreq>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>http://plurkii.appspot.com/contact</loc>
-  <changefreq>always</changefreq>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>http://plurkii.appspot.com/boys</loc>
-  <changefreq>always</changefreq>
-  <priority>1.00</priority>
-</url>
-<url>
-  <loc>http://plurkii.appspot.com/girls</loc>
-  <changefreq>always</changefreq>
-  <priority>1.00</priority>
-</url>
-<url>
-  <loc>http://plurkii.appspot.com/moreavatar</loc>
-  <changefreq>always</changefreq>
-  <priority>1.00</priority>
-</url>
-<url>
-  <loc>http://plurkii.appspot.com/wavebot</loc>
-  <changefreq>always</changefreq>
-  <priority>1.00</priority>
 </url>
 </urlset>

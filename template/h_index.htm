@@ -8,6 +8,7 @@
     {% endif %}
     <meta name="description" content="View Plurk avatar.">
     <link rel="stylesheet" type="text/css" href="/css/css.css">
+    <link rel="search" type="application/opensearchdescription+xml" title="Plurkii!" href="/plurkiisearch.xml"> 
     <script type="text/javascript">
     function loadpics(){
       for (i=2;i<={{ tv.avatar }};i=i+2){
@@ -19,26 +20,26 @@
       var uid=Number(document.getElementById("uid").innerHTML);
       var eni = i+20;
       for (i;i<=eni;i=i+2){
-        document.getElementById("demo").innerHTML= i+'.<img alt="" src="http://avatars.plurk.com/'+uid+'-big'+i+'.jpg">'+document.getElementById("demo").innerHTML;
+        document.getElementById("demo").innerHTML= '<img alt="'+i+'." src="http://avatars.plurk.com/'+uid+'-big'+i+'.jpg">'+document.getElementById("demo").innerHTML;
         document.getElementById("no").innerHTML = i;
       }
     }
     </script>
     {% include "h_analytics.htm" %}
   </head>
-  <body{{ tv.onload }}>
+  <body{{ tv.onload|safe }}>
     <table width="100%" height="80%">
       <tr>
         <td align="center" valign="middle">
           <div>
             <form action="/" method="get">
               <div class="con">Plurk 帳號或序號 <sup><a href="/howtofindid">How to!</a></sup></div>
-              <input maxlength="40" size="15" name="u" value="{{ tv.nick_name }}" placeholder="帳號無關大小寫！">
+              <input class="uin" maxlength="40" size="15" name="u" value="{{ tv.nick_name }}" placeholder="帳號無關大小寫！">
               <input type="submit" value="Plurkii!"><br>
               <div class="con">資料庫找不到可以試試<a href="/byid">這個</a>。</div>
             </form>
             {% if tv.key %}
-            {{ tv.op }}
+            {{ tv.op|safe }}
             {% else %}
             {%endif%}
           </div>

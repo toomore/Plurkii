@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """ Main WSGI. """
-'''
+
 import os
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 from google.appengine.dist import use_library
 use_library('django', '1.2')
-'''
+
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
 from google.appengine.ext.webapp.util import run_wsgi_app
@@ -15,25 +15,20 @@ from datamodel import userplurkdata
 import plurklib
 import logging
 
-def ckini(s):
-  try:
-    return int(s)
-  except:
-    return False
-
 class MainHandler(webapp.RequestHandler):
   def get(self):
     p2uinmem = []
     p2u = {}
     tv = {}
-    if len(self.request.get('u')) == 0:
+    get_u = str(self.request.get('u').replace(' ',''))
+    if len(get_u) == 0:
       pass
     else:
-      if ckini(self.request.get('u')) == False:
-        q = userplurkdata.gql("WHERE uname = '%s'" % self.request.get('u').replace(' ',''))
+      if get_u.isdigit() == False:
+        q = userplurkdata.gql("WHERE uname = '%s'" % get_u)
         if q.count() == 0:
           try:
-            uname = str(self.request.get('u')).replace(' ','').lower()
+            uname = get_u.lower()
             uno = memcache.get(uname)
             if uno:
               logging.info('Useing memcache: %s %s' % (uname,uno))
@@ -45,6 +40,7 @@ class MainHandler(webapp.RequestHandler):
               logging.info('Add memcache: %s %s' % (uname,uno))
               self.redirect('/byid?u=%s' % uno)
           except:
+            logging.info('plurklib connect error.(by user nickname)')
             self.redirect('/')
         else:
           for i in q:
@@ -57,7 +53,7 @@ class MainHandler(webapp.RequestHandler):
             p2uinmem.append(p2u.copy())
       else:
         try:
-          q = userplurkdata.get_by_key_name(str(int(self.request.get('u').replace(' ',''))))
+          q = userplurkdata.get_by_key_name(get_u)
           p2u['key'] = q.key().id_or_name()
           p2u['uname'] = q.uname
           p2u['fullname'] = q.fullname
@@ -66,9 +62,13 @@ class MainHandler(webapp.RequestHandler):
           p2u['avatar'] = q.avatar
           p2uinmem.append(p2u.copy())
         except:
-          p = plurklib.PlurkAPI('mCDwgcld4WKj1GFzZPB7mJlgm9lSHwks')
-          uno = p.usernameToUid(self.request.get('u').replace(' ',''))
-          self.redirect('/byid?u=%s' % uno)
+          try:
+            p = plurklib.PlurkAPI('mCDwgcld4WKj1GFzZPB7mJlgm9lSHwks')
+            uno = p.usernameToUid(get_u)
+            self.redirect('/byid?u=%s' % uno)
+          except:
+            logging.info('plurklib connect error.(by search uid)')
+            self.redirect('/')
 
     op = u'序號 ID 暱稱 生日 地區 頭像數<br>'
     for i in p2uinmem:
@@ -85,7 +85,7 @@ class MainHandler(webapp.RequestHandler):
       else:
         op += u'''
           <a href="/byid?u=%(key)s"><span id="uid">%(key)s</span></a> %(uname)s %(fullname)s %(birthday)s %(location)s <span id="no">%(avatar)s</span><br>
-          <button type="button" onclick="addpics()">增加照片</button><br>
+          <button type="button" onclick="addpics()">增加顯示照片</button><br>
           <span id="demo"></span><br>
           <span id="loadpics"></span><br>
           <img alt="" src="http://avatars.plurk.com/%(key)s-big.jpg">
@@ -94,19 +94,20 @@ class MainHandler(webapp.RequestHandler):
         tv['key'] = i['key']
 
     tv['op'] = op
-    tv['nick_name'] = self.request.get('u').replace(' ','')
+    tv['nick_name'] = get_u
     self.response.out.write(template.render('./template/h_index.htm',{'tv':tv}))
 
 class byid(webapp.RequestHandler):
   def get(self):
-    if len(self.request.get('u').replace(' ','')) == 0:
+    uno = self.request.get('u').replace(' ','')
+    if len(uno) == 0:
       self.response.out.write(template.render('./template/h_byid.htm',{}))
     else:
       try:
-        uid = int(self.request.get('u').replace(' ',''))
+        uid = int(uno)
         self.response.out.write(template.render('./template/h_byid.htm',{'uid':uid}))
       except:
-        self.redirect('/?u=%s' % self.request.get('u').replace(' ',''))
+        self.redirect('/?u=%s' % uno)
 
 class howtofindid(webapp.RequestHandler):
   def get(self):
@@ -116,11 +117,17 @@ class otherpage(webapp.RequestHandler):
   def get(self):
     self.response.out.write('<a href="http://plurkii.appspot.com/">Plurkii!</a>')
 
+class ooo(webapp.RequestHandler):
+  def get(self):
+    for i in dir(self.request):
+      self.response.out.write("<b>%s</b><br>%s<br><br>" % (i,getattr(self.request,i)))
+
 def main():
   """ Start up. """
   application = webapp.WSGIApplication([('/', MainHandler),
                                         ('/byid', byid),
                                         ('/howtofindid', howtofindid),
+                                        ('/ooo', ooo),
                                         ('/.*', otherpage)
                                        ],debug=True)
   run_wsgi_app(application)

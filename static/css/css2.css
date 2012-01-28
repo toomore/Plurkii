@@ -1,27 +1,17 @@
 a {
-        color:#ff5;
+        color:#0000CC;
         text-decoration: none;}
 a:hover{
-        color:#5ff}
+        color:#6666dd}
 body{
-        font-family: arial;
-        color:#fff;
-        background:#222;}
+        font-family: arial;}
 input, button{
         font-size:14pt;
         font-family: arial;
         font-weight: bold;
         padding:4px;
         margin:4px;
-        border:1px #880 solid;
-        color:#aff;
-        background:#223;}
-.uin{
-        color:#ff5;
-        background:#222;
-        border:1px #880 solid;
-        text-shadow:1px 1px 1px #f55;}
-
+        color:#446655;}
 .desc {
         float: left;
         margin: 1px;
@@ -44,9 +34,9 @@ input, button{
 .wall img{
         border:0px;
         width:86px;}
-.con, body{
+.con {
         font-size:10pt;
-        text-shadow:1px 1px 1px #5f5;}
+        text-shadow:1px 1px 1px #aaa;}
 .mimg{
         vertical-align:middle;
         border:0px;}
@@ -91,7 +81,7 @@ input, button{
 #demo {
         font-size:10pt;}
 .listq {
-        background:#334;
-        border:1px #667 solid;
+        background:#eeeeff;
+        border:1px #aaaabb solid;
         padding:6px;
         margin:6px;}

@@ -24,6 +24,11 @@ handlers:
   static_files: static/css/\1
   upload: static/css/(.*)
 
+## Firefox add-ons extension.
+- url: /plurkiisearch\.xml
+  static_files: static/plurkiisearch.xml
+  upload: static/plurkiisearch.xml
+
 ## Main WSGI
 - url: .*
   script: main_v2.py

@@ -1057,6 +1057,16 @@ class PlurkAPI:
         """
         return self.getPublicProfile(username)['user_info']['id']
 
+    def get_user_info(self, username):
+        """ Convert username to user_id.
+            Required parameters:
+                username: The user's nick name
+            Successful return:
+                The user_id of the public profile. Can be integer (like 3852645).
+        """
+        return self.getPublicProfile(username)['user_info']
+
+
     def linkToPlurkID(self, link):
         """ Convert link to plurk_id. 
             Required parameters:

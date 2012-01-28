@@ -32,14 +32,13 @@
               <input type="submit" value="Plurkii!">
               <div class="con">使用帳號<a href="/">找找</a>。</div>
             </form>
+            {% if tv.nick_name %}<div><a href="http://www.plurk.com/{{ tv.nick_name }}">{{ tv.nick_name }}</a> {{ tv.full_name }} {{ tv.location }} {{ tv.avatar }}</div>{% else %}{% endif %}
             {% if uid %}
             <div id="no">0</div>
             <button type="button" onclick="addpics()">增加顯示照片</button><br>
             <div id="demo"></div>
             <img alt="0" src="http://avatars.plurk.com/{{ uid }}-big.jpg">
-            {%else%}
-
-            {%endif%}
+            {% else %}{% endif %}
           </div>
         </td>
       </tr>

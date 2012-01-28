@@ -104,8 +104,22 @@ class byid(webapp.RequestHandler):
       self.response.out.write(template.render('./template/h_byid.htm',{}))
     else:
       try:
-        uid = int(uno)
-        self.response.out.write(template.render('./template/h_byid.htm',{'uid':uid}))
+        uno = int(uno)
+        try:
+          uinfo = memcache.get(str(uno),'userinfo')
+          if uinfo:
+            logging.info('Use userinfo memcache')
+          else:
+            try:
+              p = plurklib.PlurkAPI('mCDwgcld4WKj1GFzZPB7mJlgm9lSHwks')
+              uinfo = p.get_user_info(uno)
+              memcache.set(str(uno),uinfo,namespace='userinfo')
+            except:
+              memcache.set(str(uno),' ',namespace='userinfo')
+            logging.info('Set userinfo memcache')
+          self.response.out.write(template.render('./template/h_byid.htm',{'tv':uinfo,'uid':uno}))
+        except:
+          self.response.out.write(template.render('./template/h_byid.htm',{'uid':uno}))        
       except:
         self.redirect('/?u=%s' % uno)
 
@@ -122,12 +136,19 @@ class ooo(webapp.RequestHandler):
     for i in dir(self.request):
       self.response.out.write("<b>%s</b><br>%s<br><br>" % (i,getattr(self.request,i)))
 
+class oooo(webapp.RequestHandler):
+  def get(self):
+    p = plurklib.PlurkAPI('mCDwgcld4WKj1GFzZPB7mJlgm9lSHwks')
+    uno = p.get_user_info(703365)
+    self.response.out.write(uno)
+
 def main():
   """ Start up. """
   application = webapp.WSGIApplication([('/', MainHandler),
                                         ('/byid', byid),
                                         ('/howtofindid', howtofindid),
                                         ('/ooo', ooo),
+                                        ('/oooo', oooo),
                                         ('/.*', otherpage)
                                        ],debug=True)
   run_wsgi_app(application)

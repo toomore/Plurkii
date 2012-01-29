@@ -95,3 +95,10 @@ input, button{
         border:1px #667 solid;
         padding:6px;
         margin:6px;}
+#demo img,#loadpics img,.moreavatar img{
+        padding: 3px;
+        border:3px #333 solid;}
+.moreavatar img{
+        width:120px;}
+#demo img:hover,#loadpics img:hover,.moreavatar img:hover{
+        border:3px #ede solid;}

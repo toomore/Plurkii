@@ -14,7 +14,7 @@
       var i=Number(document.getElementById("no").innerHTML)+2;
       var eni = i+20;
       for (i;i<=eni;i=i+2){
-        document.getElementById("demo").innerHTML= '<img alt="'+i+'." src="http://avatars.plurk.com/{{ uid }}-big'+i+'.jpg">'+document.getElementById("demo").innerHTML;
+        document.getElementById("demo").innerHTML= '<img alt="'+i+'. " src="http://avatars.plurk.com/{{ uid }}-big'+i+'.jpg">'+document.getElementById("demo").innerHTML;
         document.getElementById("no").innerHTML = i;
       }
     }
@@ -32,7 +32,7 @@
               <input type="submit" value="Plurkii!">
               <div class="con">使用帳號<a href="/">找找</a>。</div>
             </form>
-            {% if tv.nick_name %}<div><a href="http://www.plurk.com/{{ tv.nick_name }}">{{ tv.nick_name }}</a> {{ tv.full_name }} {{ tv.location }} {{ tv.avatar }}</div>{% else %}{% endif %}
+            <div>{% if tv.nick_name %}<a href="http://www.plurk.com/{{ tv.nick_name }}">{{ tv.nick_name }}</a> {{ tv.full_name }} {{ tv.location }} {{ tv.avatar }}{% else %}帳號已刪除，但頭像還在！{% endif %}</div>
             {% if uid %}
             <div id="no">0</div>
             <button type="button" onclick="addpics()">增加顯示照片</button><br>

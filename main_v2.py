@@ -16,6 +16,7 @@ from datamodel import userplurkdata
 import urllib2
 import plurklib
 import logging
+import random
 
 class MainHandler(webapp.RequestHandler):
   def get(self):
@@ -184,6 +185,39 @@ class ooimg(webapp.RequestHandler):
     self.response.out.write('RGB<br><b><font color="#%(rr)s%(gg)s%(bb)s">#%(rr)s%(gg)s%(bb)s</font></b><br><br>' % oprgb)
     self.response.out.write('Orgin images<br><img src="%s"><br><br>' % self.request.get('img'))
 
+class listk(webapp.RequestHandler):
+  def get(self,gender):
+    if gender == 'girl':
+      gq = 0
+      title = 'Girls'
+    else:
+      gq = 1
+      title = 'Boys'
+    rno = random.randrange(1,4)
+    if rno == 1:
+      rq = 'avatar > 500'
+    elif rno == 2:
+      rq = 'avatar <= 500 and avatar > 250'
+    elif rno == 3:
+      rq = 'avatar <= 250 and avatar > 100'
+    else:
+      rq = 'avatar <= 100'
+
+    d = userplurkdata.gql("WHERE gender = %s and %s ORDER BY avatar desc limit %s,%s" % (gq,rq,random.randrange(1,1000 - 60),60))
+    op= ''
+    for i in d:
+      if i.avatar > 500:
+        url = "/byid?u=%s" % i.key().id_or_name()
+      else:
+        url = "/?u=%s" % i.uname
+      op += '<a href="%s"><img alt="" src="http://avatars.plurk.com/%s-big%s.jpg"></a>' % (url,i.key().id_or_name(),i.avatar)
+    self.response.out.write(template.render('./template/h_listk.htm',{'op':op,'title':title}))
+    '''
+    for k in dir(i):
+      self.response.out.write("<b>%s</b><br>%s<br><br>" % (k,getattr(i,k)))
+    self.response.out.write("<hr>")
+    '''
+
 def main():
   """ Start up. """
   application = webapp.WSGIApplication([('/', MainHandler),
@@ -192,6 +226,7 @@ def main():
                                         ('/ooo', ooo),
                                         ('/oooo', oooo),
                                         ('/ooimg', ooimg),
+                                        ('/avatar/(.*)', listk),
                                         ('/.*', otherpage)
                                        ],debug=True)
   run_wsgi_app(application)

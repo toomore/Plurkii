@@ -11,7 +11,9 @@ from google.appengine.ext import webapp
 from google.appengine.api import memcache
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import template
+from google.appengine.api.images import Image
 from datamodel import userplurkdata
+import urllib2
 import plurklib
 import logging
 
@@ -142,6 +144,31 @@ class oooo(webapp.RequestHandler):
     uno = p.get_user_info(703365)
     self.response.out.write(uno)
 
+class ooimg(webapp.RequestHandler):
+  def get(self):
+    imgdata = urllib2.urlopen(self.request.get('img')).read()
+    op = Image(imgdata).histogram()
+    avg = []
+    for i in range(256):
+      avg.append(sum([op[0][i],op[1][i],op[2][i]])/3)
+    alavg = [sum(avg[:84])/85,sum(avg[85:169])/85,sum(avg[170:255])/85]
+    if max(alavg) == alavg[0]: #OXX
+      tip = u"暗黑"
+    elif max(alavg) == alavg[1]: #XOX
+      tip = u"正常"
+    elif max(alavg) == alavg[2]: #XXO
+      if min(alavg) == alavg[1]: #OXO
+        tip = u"光明又很暗黑"
+      else:
+        tip = u"光亮"
+    else:
+      tip = '??'
+
+    self.response.out.write('histogram value<br>%s<br><br>' % op)
+    self.response.out.write('Average histogram value<br><b>%s</b><br><br>' % avg)
+    self.response.out.write('All Average histogram value<br><b>%s<br>%s</b><br><br>' % (alavg,tip))
+    self.response.out.write('Orgin images<br><img src="%s"><br><br>' % self.request.get('img'))
+
 def main():
   """ Start up. """
   application = webapp.WSGIApplication([('/', MainHandler),
@@ -149,6 +176,7 @@ def main():
                                         ('/howtofindid', howtofindid),
                                         ('/ooo', ooo),
                                         ('/oooo', oooo),
+                                        ('/ooimg', ooimg),
                                         ('/.*', otherpage)
                                        ],debug=True)
   run_wsgi_app(application)

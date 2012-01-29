@@ -164,9 +164,24 @@ class ooimg(webapp.RequestHandler):
     else:
       tip = '??'
 
+    def rgbs(inirgb):
+      alphabet = "0123456789abcdef"
+      inirgb, i = divmod(inirgb, 16)
+      shorten = alphabet[inirgb] + alphabet[i]
+      return shorten
+
+    rr = rgbs(op[0].index(max(op[0])))
+    gg = rgbs(op[1].index(max(op[1])))
+    bb = rgbs(op[2].index(max(op[2])))
+    oprgb = {}
+    oprgb['rr'] = rr
+    oprgb['gg'] = gg
+    oprgb['bb'] = bb
+
     self.response.out.write('histogram value<br>%s<br><br>' % op)
     self.response.out.write('Average histogram value<br><b>%s</b><br><br>' % avg)
     self.response.out.write('All Average histogram value<br><b>%s<br>%s</b><br><br>' % (alavg,tip))
+    self.response.out.write('RGB<br><b><font color="#%(rr)s%(gg)s%(bb)s">#%(rr)s%(gg)s%(bb)s</font></b><br><br>' % oprgb)
     self.response.out.write('Orgin images<br><img src="%s"><br><br>' % self.request.get('img'))
 
 def main():

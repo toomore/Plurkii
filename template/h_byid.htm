@@ -6,9 +6,8 @@
     {% else %}
     <title>Plurkii! search by id.</title>
     {% endif %}
-    <meta name="description" content="View Plurk avatar.">
-    <link rel="stylesheet" type="text/css" href="/css/css.css">
-    <link rel="search" type="application/opensearchdescription+xml" title="Plurkii!" href="/plurkiisearch.xml"> 
+    <meta name="description" content="View Plurk avatar by user id.">
+    {% include "h_header.htm" %}
     <script type="text/javascript">
     function addpics(){
       var i=Number(document.getElementById("no").innerHTML)+2;
@@ -28,17 +27,15 @@
           <div>
             <form action="/byid" method="get">
               <div class="con">Plurk 使用者序號 <sup><a href="/howtofindid">How to!</a></sup></div>
-              <input class="uin" maxlength="40" size="15" name="u" value="{{ uid }}" placeholder="請輸入使用者序號">
+              <input class="uin" maxlength="40" size="15" name="u" value="{{ uid }}" placeholder="輸入使用者序號...">
               <input type="submit" value="Plurkii!">
               <div class="con">使用帳號<a href="/">找找</a>。</div>
             </form>
-            <div>{% if tv.nick_name %}<a href="http://www.plurk.com/{{ tv.nick_name }}">{{ tv.nick_name }}</a> {{ tv.full_name }} {{ tv.location }} {{ tv.avatar }}{% else %}帳號已刪除，但頭像還在！{% endif %}</div>
-            {% if uid %}
-            <div id="no">0</div>
+            <div>{% if tv.nick_name %}<a href="http://www.plurk.com/{{ tv.nick_name }}">{{ tv.nick_name }}</a> {{ tv.full_name }} {{ tv.location }} {{ tv.avatar }}{% else %}{% if uid %}帳號已刪除，但頭像還在！{% else %}{% endif %}{% endif %}</div>
+            {% if uid %}<div id="no">0</div>
             <button type="button" onclick="addpics()">增加顯示照片</button><br>
             <div id="demo"></div>
-            <img alt="0" src="http://avatars.plurk.com/{{ uid }}-big.jpg">
-            {% else %}{% endif %}
+            <img alt="0" src="http://avatars.plurk.com/{{ uid }}-big.jpg">{% else %}{% endif %}
           </div>
         </td>
       </tr>

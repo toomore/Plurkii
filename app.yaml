@@ -3,12 +3,14 @@ version: v2
 runtime: python
 api_version: 1
 
+default_expiration: "1d"
+
 handlers:
 ## Favion url.
 - url: /favicon\.ico
   static_files: static/images/favicon.ico
-  upload: static/images/favicon.ico
   mime_type: image/x-icon
+  upload: static/images/favicon.ico
 
 ## Images files.
 - url: /images
@@ -22,6 +24,7 @@ handlers:
   static_dir: static/css
 - url: /css/(.*)
   static_files: static/css/\1
+  mime_type: text/css
   upload: static/css/(.*)
 
 ## Firefox add-ons extension.

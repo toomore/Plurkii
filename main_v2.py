@@ -98,6 +98,7 @@ class MainHandler(webapp.RequestHandler):
 
     tv['op'] = op
     tv['nick_name'] = get_u
+    tv['moreavatar'] = ['看更多<a href="/avatar/girl">正妹的頭像</a>','看更多<a href="/avatar/boy">猛男的頭像</a>','']
     self.response.out.write(template.render('./template/h_index.htm',{'tv':tv}))
 
 class byid(webapp.RequestHandler):
@@ -187,13 +188,14 @@ class ooimg(webapp.RequestHandler):
 
 class listk(webapp.RequestHandler):
   def get(self,gender):
+    randpage = random.randrange(1,7) ## in memcache parameter
     if gender == 'girl':
-      gq = 0
+      gq = 0 ## in memcache parameter
       title = 'Girls'
     else:
-      gq = 1
+      gq = 1 ## in memcache parameter
       title = 'Boys'
-    rno = random.randrange(1,4)
+    rno = random.randrange(1,4) ## in memcache parameter
     if rno == 1:
       rq = 'avatar > 500'
     elif rno == 2:
@@ -203,15 +205,32 @@ class listk(webapp.RequestHandler):
     else:
       rq = 'avatar <= 100'
 
-    d = userplurkdata.gql("WHERE gender = %s and %s ORDER BY avatar desc limit %s,%s" % (gq,rq,random.randrange(1,1000 - 60),60))
-    op= ''
-    for i in d:
-      if i.avatar > 500:
-        url = "/byid?u=%s" % i.key().id_or_name()
+    '''
+    memcache namespace [1:5]avatar[1:2][1:4]
+    [randpage][gender][rno] namespace: avatarpage
+    '''
+    memname = str(randpage) + str(gender) + str(rno)
+    op = memcache.get(memname,'avatarpage')
+    if op:
+      logging.info('Useing memcache avatar page. #%s' % memname)
+      self.response.out.write(template.render('./template/h_listk.htm',{'op':op,'title':title}))
+    else:
+      op = ''
+      d = userplurkdata.gql("WHERE gender = %s and %s ORDER BY avatar desc limit %s,%s" % (gq,rq,random.randrange(1,1000 - 60),60))
+      for i in d:
+        if i.avatar > 500:
+          url = "/byid?u=%s" % i.key().id_or_name()
+        else:
+          url = "/?u=%s" % i.uname
+        op += '<a href="%s"><img alt="" src="http://avatars.plurk.com/%s-big%s.jpg"></a>' % (url,i.key().id_or_name(),i.avatar)
+      if op:
+        if memcache.set(memname,op,60*60*24,namespace='avatarpage'):
+          logging.info('Set memcache avatar page. #%s' % memname)
+        else:
+          pass
       else:
-        url = "/?u=%s" % i.uname
-      op += '<a href="%s"><img alt="" src="http://avatars.plurk.com/%s-big%s.jpg"></a>' % (url,i.key().id_or_name(),i.avatar)
-    self.response.out.write(template.render('./template/h_listk.htm',{'op':op,'title':title}))
+        pass
+      self.response.out.write(template.render('./template/h_listk.htm',{'op':op,'title':title}))
     '''
     for k in dir(i):
       self.response.out.write("<b>%s</b><br>%s<br><br>" % (k,getattr(i,k)))

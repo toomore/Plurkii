@@ -21,24 +21,21 @@
     {% include "h_analytics.htm" %}
   </head>
   <body>
-    <table width="100%" height="80%">
-      <tr>
-        <td align="center" valign="middle">
-          <div>
-            <form action="/byid" method="get">
-              <div class="con">Plurk 使用者序號 <sup><a href="/howtofindid">How to!</a></sup></div>
-              <input class="uin" maxlength="40" size="15" name="u" value="{{ uid }}" placeholder="輸入使用者序號...">
-              <input type="submit" value="Plurkii!">
-              <div class="con">使用帳號<a href="/">找找</a>。</div>
-            </form>
-            <div>{% if tv.nick_name %}<a href="http://www.plurk.com/{{ tv.nick_name }}">{{ tv.nick_name }}</a> {{ tv.full_name }} {{ tv.location }} {{ tv.avatar }}{% else %}{% if uid %}帳號已刪除，但頭像還在！{% else %}{% endif %}{% endif %}</div>
-            {% if uid %}<div id="no">0</div>
-            <button type="button" onclick="addpics()">增加顯示照片</button><br>
-            <div id="demo"></div>
-            <img alt="0" src="http://avatars.plurk.com/{{ uid }}-big.jpg">{% else %}{% endif %}
-          </div>
-        </td>
-      </tr>
-    </table>
+    <div class="body">
+      <div>
+        <form action="/byid" method="get">
+          <div class="con">Plurk 使用者序號 <sup><a href="/howtofindid">How to!</a></sup></div>
+          <input class="uin" maxlength="40" size="15" name="u" value="{{ uid }}" placeholder="輸入使用者序號...">
+          <input type="submit" value="Plurkii!">
+          <div class="con">使用帳號<a href="/">找找</a>。</div>
+        </form>
+        {% if tv.nick_name %}<div class="listq"><a href="http://www.plurk.com/{{ tv.nick_name }}">{{ tv.nick_name }}</a> {{ tv.full_name }} {{ tv.location }} {{ tv.avatar }}</div>{% else %}{% if uid %}<div class="listq">帳號已刪除，但頭像還在！</div>{% else %}{% endif %}{% endif %}
+        {% if uid %}<div id="no">{{ startno }}</div>
+        <button type="button" onclick="addpics()">增加顯示照片</button>
+        {% if startno %}{% else %}<div class="con">無頭像？<a href="{{ other_url }}">試試看這個。</a></div>{% endif %}
+        <div id="demo"></div>
+        <img alt="0" src="http://avatars.plurk.com/{{ uid }}-big.jpg">{% else %}{% endif %}
+      </div>
+    </div>
   </body>
 </html>

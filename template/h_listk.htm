@@ -7,15 +7,11 @@
     {% include "h_analytics.htm" %}
   </head>
   <body>
-    <table width="100%" height="80%">
-      <tr>
-        <td align="center" valign="middle">
-          <div class="moreavatar">
-            {% if op %}{{ op|safe }}{% else %}Try again! ↓{% endif %}
-          </div>
-          <button onclick="location.reload()">View more...</button>
-        </td>
-      </tr>
-    </table>
+    <div class="body">
+      <div class="moreavatar">
+        {% if op %}{{ op|safe }}{% else %}Try again! ↓{% endif %}
+      </div>
+      <button onclick="location.reload()">View more...</button>
+    </div>
   </body>
 </html>

@@ -73,7 +73,7 @@ class MainHandler(webapp.RequestHandler):
             logging.info('plurklib connect error.(by search uid)')
             self.redirect('/')
 
-    op = u'序號 ID 暱稱 生日 地區 頭像數<br>'
+    op = u'<div class="listq">序號 ID 暱稱 生日 地區 頭像數</div>'
     for i in p2uinmem:
       if i['avatar'] > 0:
         tv['avatar'] = i['avatar']
@@ -87,7 +87,7 @@ class MainHandler(webapp.RequestHandler):
         tv['key'] = i['key']
       else:
         op += u'''
-          <a href="/byid?u=%(key)s"><span id="uid">%(key)s</span></a> %(uname)s %(fullname)s %(birthday)s %(location)s <span id="no">%(avatar)s</span><br>
+          <div class="listq"><a href="/byid?u=%(key)s"><span id="uid">%(key)s</span></a> %(uname)s %(fullname)s %(birthday)s %(location)s <span id="no">%(avatar)s</span></div>
           <button type="button" onclick="addpics()">增加顯示照片</button><br>
           <span id="demo"></span><br>
           <span id="loadpics"></span><br>
@@ -107,6 +107,11 @@ class byid(webapp.RequestHandler):
     if len(uno) == 0:
       self.response.out.write(template.render('./template/h_byid.htm',{}))
     else:
+      if self.request.get('m'):
+        startno = -1
+      else:
+        startno = 0
+      other_url = self.request.path_qs + '&m=1'
       try:
         uno = int(uno)
         try:
@@ -121,9 +126,9 @@ class byid(webapp.RequestHandler):
             except:
               memcache.set(str(uno),' ',namespace='userinfo')
             logging.info('Set userinfo memcache')
-          self.response.out.write(template.render('./template/h_byid.htm',{'tv':uinfo,'uid':uno}))
+          self.response.out.write(template.render('./template/h_byid.htm',{'tv':uinfo,'uid':uno,'startno':startno,'other_url':other_url}))
         except:
-          self.response.out.write(template.render('./template/h_byid.htm',{'uid':uno}))        
+          self.response.out.write(template.render('./template/h_byid.htm',{'uid':uno,'startno':startno,'other_url':other_url}))
       except:
         self.redirect('/?u=%s' % uno)
 

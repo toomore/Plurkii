@@ -102,3 +102,8 @@ input, button{
         width:120px;}
 #demo img:hover,#loadpics img:hover,.moreavatar img:hover{
         border:3px #ede solid;}
+.body {
+        width:100%;
+        height:100px;
+        margin:0 auto;
+        text-align:center;}

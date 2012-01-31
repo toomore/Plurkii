@@ -148,7 +148,7 @@ class ooo(webapp.RequestHandler):
 class oooo(webapp.RequestHandler):
   def get(self):
     p = plurklib.PlurkAPI('mCDwgcld4WKj1GFzZPB7mJlgm9lSHwks')
-    uno = p.get_user_info(703365)
+    uno = p.get_user_info(self.request.get('n'))
     self.response.out.write(uno)
 
 class ooimg(webapp.RequestHandler):

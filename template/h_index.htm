@@ -6,7 +6,7 @@
     {% else %}
     <title>Plurkii!</title>
     {% endif %}
-    <meta name="description" content="View Plurk avatar.">
+    <meta name="description" content="觀看噗浪頭像 View Plurk avatar.">
     {% include "h_header.htm" %}
     {% if tv.key %}
     <script type="text/javascript">
@@ -30,6 +30,7 @@
   <body{{ tv.onload|safe }}>
     <div class="body">
       <div>
+        {% include "h_fblike.htm" %}
         <form action="/" method="get">
           <div class="con">Plurk 帳號或序號 <sup><a href="/howtofindid">How to!</a></sup></div>
           <input class="uin" maxlength="40" size="15" name="u" value="{{ tv.nick_name }}" placeholder="輸入帳號或序號...">

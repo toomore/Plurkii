@@ -200,13 +200,17 @@ class listk(webapp.RequestHandler):
     else:
       gq = 1 ## in memcache parameter
       title = 'Boys'
-    rno = random.randrange(1,4) ## in memcache parameter
+    rno = random.randrange(1,6) ## in memcache parameter
     if rno == 1:
       rq = 'avatar > 500'
     elif rno == 2:
-      rq = 'avatar <= 500 and avatar > 250'
+      rq = 'avatar <= 500 and avatar > 400'
     elif rno == 3:
-      rq = 'avatar <= 250 and avatar > 100'
+      rq = 'avatar <= 400 and avatar > 300'
+    elif rno == 4:
+      rq = 'avatar <= 300 and avatar > 200'
+    elif rno == 5:
+      rq = 'avatar <= 200 and avatar > 100'
     else:
       rq = 'avatar <= 100'
 
@@ -235,7 +239,11 @@ class listk(webapp.RequestHandler):
           pass
       else:
         pass
-      self.response.out.write(template.render('./template/h_listk.htm',{'op':op,'title':title}))
+      if op == '':
+        logging.info('Avatar page redirect. #%s' % self.request.path_qs)
+        self.redirect(self.request.path_qs)
+      else:
+        self.response.out.write(template.render('./template/h_listk.htm',{'op':op,'title':title}))
     '''
     for k in dir(i):
       self.response.out.write("<b>%s</b><br>%s<br><br>" % (k,getattr(i,k)))

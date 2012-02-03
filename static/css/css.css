@@ -24,9 +24,7 @@ input, button{
 
 .desc {
         float: left;
-        margin: 1px;
-        font-size:10pt;
-        padding: 1px;}
+        font-size:10pt;}
 .descr {
         float: right;
         margin: 1px;

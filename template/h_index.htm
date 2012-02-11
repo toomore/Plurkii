@@ -30,7 +30,7 @@
   <body{{ tv.onload|safe }}>
     <div class="body">
       <div>
-        {% include "h_fblike.htm" %}
+
         <form action="/" method="get">
           <div class="con">Plurk 帳號或序號 <sup><a href="/howtofindid">How to!</a></sup></div>
           <input class="uin" maxlength="40" size="15" name="u" value="{{ tv.nick_name }}" placeholder="輸入帳號或序號...">
@@ -40,5 +40,6 @@
         {% if tv.key %}{{ tv.op|safe }}{% else %}{% endif %}
       </div>
     </div>
+    {% include "h_fblike.htm" %}
   </body>
 </html>

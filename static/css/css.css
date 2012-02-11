@@ -22,8 +22,13 @@ input, button{
         border:1px #880 solid;
         text-shadow:1px 1px 1px #f55;}
 
-.desc {
-        float: left;
+.likelist {
+        z-index:1;
+        text-align:center;
+        position:fixed;
+        bottom:0pt;
+        width:100%;
+        background:#555;
         font-size:10pt;}
 .descr {
         float: right;
@@ -94,6 +99,7 @@ input, button{
         padding:6px;
         margin:6px;}
 #demo img,#loadpics img,.moreavatar img{
+        width:195px;
         padding: 3px;
         border:3px #333 solid;}
 .moreavatar img{

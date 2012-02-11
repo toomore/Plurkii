@@ -8,11 +8,11 @@
   </head>
   <body>
     <div class="body">
-      {% include "h_fblike.htm" %}
       <div class="moreavatar">
         {% if op %}{{ op|safe }}{% else %}Try again! ↓{% endif %}
       </div>
       <button onclick="location.reload()">View more...</button>
     </div>
+    {% include "h_fblike.htm" %}
   </body>
 </html>

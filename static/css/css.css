@@ -13,13 +13,16 @@ input, button{
         font-weight: bold;
         padding:4px;
         margin:4px;
-        border:1px #880 solid;
+        border:3px #880 solid;
         color:#aff;
-        background:#223;}
+        background:#223;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;}
+input:hover, button:hover{
+        border:3px #dd5 solid;}
 .uin{
         color:#ff5;
-        background:#222;
-        border:1px #880 solid;
         text-shadow:1px 1px 1px #f55;}
 
 .likelist {
@@ -97,13 +100,22 @@ input, button{
         background:#334;
         border:1px #667 solid;
         padding:6px;
-        margin:6px;}
+        margin:6px;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;}
 #demo img,#loadpics img,.moreavatar img{
         width:195px;
-        padding: 3px;
-        border:3px #333 solid;}
+        margin: 3px;
+        border:3px #333 solid;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;}
 .moreavatar img{
-        width:120px;}
+        width:120px;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;}
 #demo img:hover,#loadpics img:hover,.moreavatar img:hover{
         border:3px #ede solid;}
 .body {

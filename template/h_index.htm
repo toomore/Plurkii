@@ -30,16 +30,15 @@
   <body>
     <div class="body">
       <div>
-
         <form action="/" method="get">
           <div class="con">Plurk 帳號或序號 <sup><a href="/howtofindid">How to!</a></sup></div>
           <input class="uin" maxlength="40" size="15" name="u" value="{{ tv.nick_name }}" placeholder="輸入帳號或序號...">
           <input type="submit" value="Plurkii!"><br>
           <div class="con">資料庫找不到可以試試<a href="/byid">這個</a>。{{ tv.moreavatar|random|safe }}</div>
         </form>
+        {% include "h_fblike.htm" %}
         {% if tv.key %}{{ tv.op|safe }}{% else %}{% endif %}
       </div>
     </div>
-    {% include "h_fblike.htm" %}
   </body>
 </html>

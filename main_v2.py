@@ -93,7 +93,6 @@ class MainHandler(webapp.RequestHandler):
           <span id="loadpics"></span><br>
           <img alt="" src="http://avatars.plurk.com/%(key)s-big.jpg">
           ''' % i
-        tv['onload'] = " onLoad='loadpics()'"
         tv['key'] = i['key']
 
     tv['op'] = op

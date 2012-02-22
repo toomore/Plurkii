@@ -10,11 +10,11 @@
     {% include "h_header.htm" %}
     {% if tv.key %}
     <script type="text/javascript">
-    function loadpics(){
+    $(document).ready(function() {
       for (i={{ tv.avatar }};i>0;i=i-2){
-        document.getElementById("loadpics").innerHTML= document.getElementById("loadpics").innerHTML + '<img alt="" src="http://avatars.plurk.com/'+{{ tv.key }}+'-big'+i+'.jpg">';
+          document.getElementById("loadpics").innerHTML= document.getElementById("loadpics").innerHTML + '<img alt="" src="http://avatars.plurk.com/'+{{ tv.key }}+'-big'+i+'.jpg">';
       }
-    }
+    });
     function addpics(){
       var i=Number(document.getElementById("no").innerHTML)+2;
       var uid=Number(document.getElementById("uid").innerHTML);
@@ -27,7 +27,7 @@
     </script>{% else %}{% endif %}
     {% include "h_analytics.htm" %}
   </head>
-  <body{{ tv.onload|safe }}>
+  <body>
     <div class="body">
       <div>
 

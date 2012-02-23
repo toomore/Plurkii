@@ -1,63 +1,106 @@
 Plurkii!
-Search your friends or fans's avatars.
-http://plurkii.appspot.com/ 
+========
 
-===== Install =====
+Search your friends or fans's avatars.
+
+http://plurkii.appspot.com/
+
+Install
+========
+
 python 2.6
 
 Google App Engine
+
 - Change app.yaml to your project id.
 
 Google Analytics
+
 - Change the analytic key.
 
-===== About Pages =====
+About Pages
+===========
+
 /?u={user_nickname}
-  1.Go to the 'userplurkdata' data to find past user info.
-  2.If someone delete an account but rebuild the account uesing the same UID,
+-------------------
+
+#. Go to the 'userplurkdata' data to find past user info.
+#. If someone delete an account but rebuild the account uesing the same UID,
     the past avatars are still in Plurk data.
 
 /byid?u={user_IDNO}
-  1.If user delete an account,USERID can not to work, so have to useing UID to
-    find out past avatar.
+-------------------
+
+#. If user delete an account,USERID can not to work, so have to useing UID to
+   find out past avatar.
 
 /byid?u={user_IDNO}&m=1
-  1.Some users's avatar serial no is made by odd, so useing this mod to find out.
+-----------------------
+
+#. Some users's avatar serial no is made by odd, so useing this mod to find out.
 
 /avatar/{girl|boy}
-  1.Random to display more avatars user.
+------------------
 
-===== Know issues =====
-1. Boys and Girls Wall use CPU too much.
+#. Random to display more avatars user.
 
-===== Files =====
+Know issues
+===========
+
+#. Boys and Girls Wall use CPU too much.
+
+Files
+=====
+
 main_v2.py
-  main web class.
-plurklib.py
-  plurk API libs.
-datamodel.py
-  Data model.
+----------
 
-===== Change Logs =====
+main web class.
+
+plurklib.py
+-----------
+
+plurk API libs.
+
+datamodel.py
+-------------
+
+Data model.
+
+Change Logs
+===========
+
 2.8.1
+-----
+
  - Add jQuery.ready() for loadpic.
  - Tiny CSS change for border-radius.
 
 2.8.0
+-----
+
  - New way to view Plurk user avatar.
 
 2.7.0
+-----
+
  - Add Google Wave Robot(dev)
  - Add Google Wave Robot information page.
 
 2.6.1
+-----
+
  - Change sitemap.
 
 2.6.0
+-----
+
  - Add More Avatars Wall.
  - Change template path.
 
 2.5.0
+-----
+
  - Write description and application.
  - Change promote icon place.
  - Add karma 100 wall

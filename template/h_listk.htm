@@ -2,12 +2,13 @@
   <head>
     <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
     <title>List more avatar {{ title }} - Plurkii!</title>
-    <meta name="description" content="View more Plurk avatar.">
+    <meta name="description" content="觀看許多頭像的使用者 View more Plurk avatar.">
     {% include "h_header.htm" %}
     {% include "h_analytics.htm" %}
   </head>
   <body>
     <div class="body">
+      {% include "h_fblike.htm" %}
       <div class="moreavatar">
         {% if op %}{{ op|safe }}{% else %}Try again! ↓{% endif %}
       </div>

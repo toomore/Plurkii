@@ -6,15 +6,15 @@
     {% else %}
     <title>Plurkii!</title>
     {% endif %}
-    <meta name="description" content="View Plurk avatar.">
+    <meta name="description" content="觀看噗浪頭像 View Plurk avatar.">
     {% include "h_header.htm" %}
     {% if tv.key %}
     <script type="text/javascript">
-    function loadpics(){
+    $(document).ready(function() {
       for (i={{ tv.avatar }};i>0;i=i-2){
-        document.getElementById("loadpics").innerHTML= document.getElementById("loadpics").innerHTML + '<img alt="" src="http://avatars.plurk.com/'+{{ tv.key }}+'-big'+i+'.jpg">';
+          document.getElementById("loadpics").innerHTML= document.getElementById("loadpics").innerHTML + '<img alt="" src="http://avatars.plurk.com/'+{{ tv.key }}+'-big'+i+'.jpg">';
       }
-    }
+    });
     function addpics(){
       var i=Number(document.getElementById("no").innerHTML)+2;
       var uid=Number(document.getElementById("uid").innerHTML);
@@ -27,7 +27,7 @@
     </script>{% else %}{% endif %}
     {% include "h_analytics.htm" %}
   </head>
-  <body{{ tv.onload|safe }}>
+  <body>
     <div class="body">
       <div>
         <form action="/" method="get">
@@ -36,6 +36,7 @@
           <input type="submit" value="Plurkii!"><br>
           <div class="con">資料庫找不到可以試試<a href="/byid">這個</a>。{{ tv.moreavatar|random|safe }}</div>
         </form>
+        {% include "h_fblike.htm" %}
         {% if tv.key %}{{ tv.op|safe }}{% else %}{% endif %}
       </div>
     </div>

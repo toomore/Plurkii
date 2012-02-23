@@ -16,4 +16,14 @@
   <changefreq>always</changefreq>
   <priority>0.80</priority>
 </url>
+<url>
+  <loc>http://plurkii.appspot.com/girl</loc>
+  <changefreq>always</changefreq>
+  <priority>0.90</priority>
+</url>
+<url>
+  <loc>http://plurkii.appspot.com/boy</loc>
+  <changefreq>always</changefreq>
+  <priority>0.70</priority>
+</url>
 </urlset>

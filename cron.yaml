@@ -1,1 +1,9 @@
 cron:
+- description: cache girls
+  url: /avatar/girl
+  schedule: every 30 minutes synchronized
+  timezone: Asia/Taipei
+- description: cache boys
+  url: /avatar/boy
+  schedule: every 2 hours synchronized
+  timezone: Asia/Taipei

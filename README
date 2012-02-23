@@ -39,6 +39,10 @@ datamodel.py
   Data model.
 
 ===== Change Logs =====
+2.8.1
+ - Add jQuery.ready() for loadpic.
+ - Tiny CSS change for border-radius.
+
 2.8.0
  - New way to view Plurk user avatar.
 
